@@ -7,7 +7,7 @@
   Para cualquier negocio que atiende por orden de llegada, en español, English y português.
 </p>
 
-> **Estado: MVP listo (fase 1).** Kiosco, ticketera, pantalla de llamado, panel para atender y seguimiento por QR funcionando. Próximo: citas.
+> **Estado: fases 1 y 2 listas.** Turnos (kiosco, ticketera, pantalla con voz, panel, QR) y citas (reserva en línea, agenda, check-in con prioridad). Próximo: reportes y Release v1.0.
 
 **Fluxa** organiza la atención por orden de llegada: el cliente saca su número en un kiosco o con un QR, una pantalla lo llama con sonido y voz, y cada empleado atiende desde su panel. Sirve para carnicerías, charcuterías, pescaderías, panaderías, barberías, peluquerías, autolavados, consultorios, farmacias, bancos y oficinas de atención al público.
 
@@ -17,8 +17,9 @@
 |---|---|---|
 | 0. Base | Proyecto independiente a partir de [Resolvo](https://github.com/jmobandod2000/resolvo-helpdesk): usuarios, negocio, sucursales, 3 idiomas, Docker e instalador | ✅ |
 | 1. MVP | Tipo de negocio en el asistente inicial (con secciones y vocabulario sugeridos), secciones con prefijo, kiosco, ticketera térmica 58/80 mm, pantalla de llamado en tiempo real con voz, panel del empleado y seguimiento por QR | ✅ |
-| 2. Completo | Citas (peluquerías, consultorios) integradas con la fila, llamado por voz, reportes de espera y atención, varias tiendas | ⏳ |
-| 3. Lanzamiento | Marca definitiva, paquete de instalación, Release v1.0 | ⏳ |
+| 2. Citas | Reserva pública con horario por puesto, agenda del equipo, check-in con prioridad en la fila, confirmación y recordatorio por correo | ✅ |
+| 3. Reportes | Tiempos de espera y atención por sección, hora y empleado; horas pico; Excel | ⏳ |
+| 4. Lanzamiento | Paquete de instalación, capturas, Release v1.0 | ⏳ |
 
 ## Instalación
 
