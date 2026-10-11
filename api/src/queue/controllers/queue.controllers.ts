@@ -18,6 +18,8 @@ import { Auth, GetUser } from '../../auth/decorators';
 import { OrganizationService, SitesService } from '../../organization/services';
 import { CallNextDto, IssueTurnDto, TransferTurnDto } from '../dtos';
 import { QueueEventsService, SectionsService, TurnsService } from '../services';
+import { ReportsService } from '../services/reports.service';
+import { ValidRoles } from '../../auth/interfaces';
 
 const HEARTBEAT_MS = 25_000;
 const MINUTE = 60_000;
@@ -87,7 +89,27 @@ export class QueuePublicController {
 @ApiTags('Queue')
 @Controller('queue')
 export class QueueController {
-  constructor(private readonly turnsService: TurnsService) {}
+  constructor(
+    private readonly turnsService: TurnsService,
+    private readonly reportsService: ReportsService,
+  ) {}
+
+  // Reporte de espera y atención (AAAA-MM-DD, hasta 93 días)
+  @Get('reports')
+  @Auth(ValidRoles.ADMIN)
+  report(
+    @Query('from') from: string,
+    @Query('to') to: string,
+    @Query('siteId') siteId?: string,
+  ) {
+    const date = /^\d{4}-\d{2}-\d{2}$/;
+    const today = new Date().toLocaleDateString('en-CA');
+    return this.reportsService.report(
+      date.test(from) ? from : today,
+      date.test(to) ? to : today,
+      parseSite(siteId),
+    );
+  }
 
   @Get('today')
   @Auth()

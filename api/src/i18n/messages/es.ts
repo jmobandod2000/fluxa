@@ -1,5 +1,7 @@
 export default {
   errors: {
+    reportRange: 'La fecha inicial no puede ser posterior a la final',
+    reportTooLong: 'El reporte admite hasta {days} días',
     appointmentServiceNotFound: 'Ese servicio no acepta citas',
     appointmentNotFound: 'No se encontró la cita',
     appointmentSlotTaken: 'Ese horario ya no está disponible. Elige otro.',

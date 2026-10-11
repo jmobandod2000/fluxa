@@ -7,6 +7,7 @@ import UsersRouter from 'src/modules/users/router';
 import AboutRouter from 'src/modules/about/router';
 import OrganizationRouter from 'src/modules/organization/router';
 import { QueuePublicRouter, QueueStaffRouter } from 'src/modules/queue/router';
+import ReportsRouter from 'src/modules/reports/router';
 
 const routes: RouteRecordRaw[] = [
   AuthRouter,
@@ -15,7 +16,14 @@ const routes: RouteRecordRaw[] = [
     component: () => import('src/modules/shared/layouts/MainLayout.vue'),
     beforeEnter: [isAuthenticatedGuard],
     redirect: { name: 'dashboard' },
-    children: [...HomeRouter, ...QueueStaffRouter, ...UsersRouter, ...AboutRouter, ...OrganizationRouter],
+    children: [
+      ...HomeRouter,
+      ...QueueStaffRouter,
+      ...ReportsRouter,
+      ...UsersRouter,
+      ...AboutRouter,
+      ...OrganizationRouter,
+    ],
   },
   ...QueuePublicRouter,
   {

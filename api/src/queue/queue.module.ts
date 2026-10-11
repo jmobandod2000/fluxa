@@ -15,6 +15,7 @@ import {
   AppointmentsPublicController,
 } from './controllers/appointments.controllers';
 import { AppointmentsService } from './services/appointments.service';
+import { ReportsService } from './services/reports.service';
 import {
   CountersService,
   QueueEventsService,
@@ -42,6 +43,7 @@ import {
     CountersService,
     TurnsService,
     AppointmentsService,
+    ReportsService,
   ],
 })
 export class QueueModule {}

@@ -2,6 +2,8 @@ import type { MessageSchema } from '../i18n';
 
 const messages: MessageSchema = {
   errors: {
+    reportRange: 'The start date cannot be after the end date',
+    reportTooLong: 'Reports cover up to {days} days',
     appointmentServiceNotFound: 'That service does not take appointments',
     appointmentNotFound: 'Appointment not found',
     appointmentSlotTaken:
