@@ -18,7 +18,7 @@
 | 0. Base | Proyecto independiente a partir de [Resolvo](https://github.com/jmobandod2000/resolvo-helpdesk): usuarios, negocio, sucursales, 3 idiomas, Docker e instalador | ✅ |
 | 1. MVP | Tipo de negocio en el asistente inicial (con secciones y vocabulario sugeridos), secciones con prefijo, kiosco, ticketera térmica 58/80 mm, pantalla de llamado en tiempo real con voz, panel del empleado y seguimiento por QR | ✅ |
 | 2. Citas | Reserva pública con horario por puesto, agenda del equipo, check-in con prioridad en la fila, confirmación y recordatorio por correo | ✅ |
-| 3. Reportes | Tiempos de espera y atención por sección, hora y empleado; horas pico; Excel | ⏳ |
+| 3. Reportes | Tiempos de espera y atención por sección, hora y empleado; horas pico; Excel | ✅ |
 | 4. Lanzamiento | Paquete de instalación, capturas, Release v1.0 | ⏳ |
 
 ## Instalación
