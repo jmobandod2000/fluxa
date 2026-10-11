@@ -1,6 +1,6 @@
 {
   "name": "fluxa-web",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Fluxa: sistema de turnos y filas de espera open source y autoalojado",
   "productName": "Fluxa",
   "type": "module",

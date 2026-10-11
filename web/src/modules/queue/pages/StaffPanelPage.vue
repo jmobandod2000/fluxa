@@ -15,7 +15,7 @@ import { minutesSince } from '../helpers/queueHelpers';
 
 const COUNTER_KEY = 'fluxa.counterId';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { handleApiResponseError } = useHandlerErrors();
 const { infoNotify } = useNotify();
 const { businessType } = usePublicProfile();
@@ -250,7 +250,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
             </div>
             <div class="col-4">
               <q-card flat bordered class="text-center q-pa-sm">
-                <div class="text-h5 text-weight-bold">{{ state?.stats.avgWaitMinutes ?? '—' }}</div>
+                <div class="text-h5 text-weight-bold">{{ state?.stats.avgWaitMinutes?.toLocaleString(locale) ?? '—' }}</div>
                 <div class="text-caption text-grey-7">{{ t('attend.avgWait') }}</div>
               </q-card>
             </div>

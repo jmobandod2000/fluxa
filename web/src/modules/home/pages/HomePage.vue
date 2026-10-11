@@ -13,7 +13,7 @@ import useVocabulary from 'src/modules/queue/composables/useVocabulary';
 import { buildDisplayUrl, buildKioskUrl, type PaperWidth } from 'src/modules/queue/helpers/queueHelpers';
 import { QueueRoutes } from 'src/modules/queue/interfaces/queue';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { successNotify, errorNotify } = useNotify();
 const { organizationName, businessType } = usePublicProfile();
 const { customerWord } = useVocabulary(businessType);
@@ -37,7 +37,7 @@ const displayUrl = computed(() => buildDisplayUrl(siteId.value));
 const stats = computed(() => [
   { label: t('home.stats.waiting'), value: today.value?.waiting ?? 0, icon: 'sym_r_hourglass' },
   { label: t('home.stats.served'), value: today.value?.served ?? 0, icon: 'sym_r_check_circle' },
-  { label: t('home.stats.avgWait'), value: today.value?.avgWaitMinutes ?? '—', icon: 'sym_r_timer' },
+  { label: t('home.stats.avgWait'), value: today.value?.avgWaitMinutes?.toLocaleString(locale.value) ?? '—', icon: 'sym_r_timer' },
   { label: t('home.stats.noShow'), value: today.value?.noShow ?? 0, icon: 'sym_r_person_off' },
 ]);
 
