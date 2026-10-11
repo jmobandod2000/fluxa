@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsEmail,
+  IsInt,
+  Max,
+  Min,
   IsOptional,
   IsString,
   MaxLength,
@@ -58,4 +62,20 @@ export class UpsertOrganizationDto {
   @IsString()
   @MaxLength(40)
   businessType?: string | null;
+
+  @ApiProperty({ required: false, description: 'Reserva pública de citas' })
+  @IsOptional()
+  @IsBoolean()
+  bookingEnabled?: boolean;
+
+  @ApiProperty({
+    required: false,
+    description: 'Días hacia adelante para reservar',
+    example: 14,
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(90)
+  bookingDays?: number;
 }

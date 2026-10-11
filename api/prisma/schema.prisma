@@ -31,17 +31,20 @@ model User {
 
 // Datos del negocio (registro único)
 model Organization {
-  id           Int      @id @default(1)
-  name         String
-  taxId        String?
-  email        String?
-  phone        String?
-  address      String?
-  website      String?
+  id             Int      @id @default(1)
+  name           String
+  taxId          String?
+  email          String?
+  phone          String?
+  address        String?
+  website        String?
   // Tipo de negocio elegido en el asistente (butcher, barbershop, clinic...): define vocabulario y secciones sugeridas
-  businessType String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  businessType   String?
+  // Citas: reserva pública activada y cuántos días hacia adelante se puede reservar
+  bookingEnabled Boolean  @default(false)
+  bookingDays    Int      @default(14)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 // Tienda o sucursal
@@ -57,6 +60,8 @@ model Site {
   Counters Counter[]
   Turns    Turn[]
 
+  Appointments Appointment[]
+
   @@index([isDeleted])
 }
 
@@ -70,19 +75,23 @@ enum TurnStatus {
 
 // Fila de atención (carnicería, corte, lavado...). El prefijo identifica sus números: C-015
 model Section {
-  id          Int      @id @default(autoincrement())
-  name        String
-  prefix      String
-  description String?
-  color       String?
-  sortOrder   Int      @default(0)
-  isActive    Boolean  @default(true)
-  isDeleted   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  name            String
+  prefix          String
+  description     String?
+  color           String?
+  sortOrder       Int      @default(0)
+  // Se puede reservar cita para esta sección; duración de cada cita en minutos
+  bookable        Boolean  @default(false)
+  durationMinutes Int      @default(30)
+  isActive        Boolean  @default(true)
+  isDeleted       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  Counters Counter[]
-  Turns    Turn[]
+  Counters     Counter[]
+  Turns        Turn[]
+  Appointments Appointment[]
 
   @@index([isDeleted])
 }
@@ -97,36 +106,90 @@ model Counter {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Site     Site?     @relation(fields: [siteId], references: [id])
-  Sections Section[]
-  Turns    Turn[]
+  Site         Site?             @relation(fields: [siteId], references: [id])
+  Sections     Section[]
+  Turns        Turn[]
+  Schedules    CounterSchedule[]
+  Appointments Appointment[]
 
   @@index([isDeleted])
 }
 
 // Turno emitido. La numeración se reinicia cada día por sección
 model Turn {
-  id          Int        @id @default(autoincrement())
-  number      Int
-  code        String
-  serviceDate String
-  status      TurnStatus @default(WAITING)
-  sectionId   Int
-  siteId      Int?
-  counterId   Int?
-  calledById  Int?
-  publicToken String     @unique
-  recallCount Int        @default(0)
-  createdAt   DateTime   @default(now())
-  calledAt    DateTime?
-  finishedAt  DateTime?
+  id            Int        @id @default(autoincrement())
+  number        Int
+  code          String
+  serviceDate   String
+  status        TurnStatus @default(WAITING)
+  sectionId     Int
+  siteId        Int?
+  counterId     Int?
+  calledById    Int?
+  publicToken   String     @unique
+  recallCount   Int        @default(0)
+  // Las citas que llegan entran con prioridad (se llaman antes que la fila normal)
+  priority      Int        @default(0)
+  appointmentId Int?       @unique
+  createdAt     DateTime   @default(now())
+  calledAt      DateTime?
+  finishedAt    DateTime?
 
-  Section  Section  @relation(fields: [sectionId], references: [id])
-  Site     Site?    @relation(fields: [siteId], references: [id])
-  Counter  Counter? @relation(fields: [counterId], references: [id])
-  CalledBy User?    @relation(fields: [calledById], references: [id])
+  Section     Section      @relation(fields: [sectionId], references: [id])
+  Site        Site?        @relation(fields: [siteId], references: [id])
+  Counter     Counter?     @relation(fields: [counterId], references: [id])
+  CalledBy    User?        @relation(fields: [calledById], references: [id])
+  Appointment Appointment? @relation(fields: [appointmentId], references: [id])
 
   @@unique([sectionId, siteId, serviceDate, number])
   @@index([serviceDate, status])
   @@index([siteId, serviceDate])
+}
+
+// Horario semanal de un puesto para recibir citas (minutos desde las 00:00; weekday 0 = domingo)
+model CounterSchedule {
+  id          Int @id @default(autoincrement())
+  counterId   Int
+  weekday     Int
+  startMinute Int
+  endMinute   Int
+
+  Counter Counter @relation(fields: [counterId], references: [id], onDelete: Cascade)
+
+  @@index([counterId, weekday])
+}
+
+enum AppointmentStatus {
+  BOOKED
+  CHECKED_IN
+  CANCELLED
+  NO_SHOW
+}
+
+model Appointment {
+  id             Int               @id @default(autoincrement())
+  sectionId      Int
+  counterId      Int
+  siteId         Int?
+  startsAt       DateTime
+  endsAt         DateTime
+  status         AppointmentStatus @default(BOOKED)
+  customerName   String
+  customerPhone  String?
+  customerEmail  String?
+  notes          String?
+  publicToken    String            @unique
+  language       String            @default("es")
+  reminderSentAt DateTime?
+  createdById    Int?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  Section Section @relation(fields: [sectionId], references: [id])
+  Counter Counter @relation(fields: [counterId], references: [id])
+  Site    Site?   @relation(fields: [siteId], references: [id])
+  Turn    Turn?
+
+  @@index([counterId, startsAt])
+  @@index([startsAt, status])
 }

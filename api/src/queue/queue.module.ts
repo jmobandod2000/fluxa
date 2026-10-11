@@ -11,6 +11,11 @@ import {
   QueuePublicController,
 } from './controllers/queue.controllers';
 import {
+  AppointmentsController,
+  AppointmentsPublicController,
+} from './controllers/appointments.controllers';
+import { AppointmentsService } from './services/appointments.service';
+import {
   CountersService,
   QueueEventsService,
   SectionsService,
@@ -28,12 +33,15 @@ import {
     CountersController,
     QueuePublicController,
     QueueController,
+    AppointmentsPublicController,
+    AppointmentsController,
   ],
   providers: [
     QueueEventsService,
     SectionsService,
     CountersService,
     TurnsService,
+    AppointmentsService,
   ],
 })
 export class QueueModule {}

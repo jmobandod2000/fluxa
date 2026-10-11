@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   Matches,
+  Max,
   MaxLength,
   Min,
   MinLength,
@@ -38,6 +39,22 @@ export class CreateSectionDto {
   @IsInt()
   @Min(0)
   sortOrder?: number;
+
+  @ApiProperty({ required: false, description: 'Acepta citas' })
+  @IsOptional()
+  @IsBoolean()
+  bookable?: boolean;
+
+  @ApiProperty({
+    required: false,
+    description: 'Duración de cada cita (min)',
+    example: 30,
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(5)
+  @Max(480)
+  durationMinutes?: number;
 
   @ApiProperty({ required: false })
   @IsOptional()

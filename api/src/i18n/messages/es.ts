@@ -1,5 +1,15 @@
 export default {
   errors: {
+    appointmentServiceNotFound: 'Ese servicio no acepta citas',
+    appointmentNotFound: 'No se encontró la cita',
+    appointmentSlotTaken: 'Ese horario ya no está disponible. Elige otro.',
+    appointmentInvalidState: 'La cita ya no admite esa acción',
+    appointmentContactRequired:
+      'Deja un teléfono o un correo para confirmarte la cita',
+    appointmentOutOfWindow:
+      'Solo se puede reservar desde hoy y hasta {days} días adelante',
+    appointmentInvalid: 'No se pudo registrar la cita',
+    bookingDisabled: 'Las reservas en línea no están activas',
     sectionNotFound: 'No se encontró la sección {id}',
     sectionInactive: 'La sección {name} está inactiva',
     sectionDuplicate: 'Ya existe una sección llamada {name}',
@@ -81,6 +91,22 @@ export default {
     default: '{field} no es válido',
   },
   emails: {
+    appointment: {
+      cta: 'Ver o cancelar mi cita',
+      footer:
+        'Si no puedes asistir, cancela desde el enlace para liberar el horario.',
+      confirmation: {
+        subject: 'Cita confirmada: {service}, {when}',
+        heading: '¡Listo, {name}! Tu cita está confirmada',
+        intro:
+          '{service} con {counter}\n{when}\nAl llegar, avisa que tienes cita y entrarás a la fila con prioridad.',
+      },
+      reminder: {
+        subject: 'Recordatorio: {service}, {when}',
+        heading: 'Te esperamos, {name}',
+        intro: 'Recuerda tu cita de {service} con {counter}\n{when}',
+      },
+    },
     common: {
       cta: 'Ver mi solicitud',
       messageTitle: 'Mensaje del equipo de TI',

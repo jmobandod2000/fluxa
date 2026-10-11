@@ -51,7 +51,7 @@ export class TurnsService {
 
   // ---------- público (kiosco, pantalla, celular) ----------
 
-  async issue(dto: IssueTurnDto) {
+  async issue(dto: IssueTurnDto, appointment?: { id: number }) {
     const section = await this.sectionsService.findAssignable(dto.sectionId);
     const siteId = dto.siteId ?? null;
     await this.sitesService.assertAssignable(siteId);
@@ -73,6 +73,7 @@ export class TurnsService {
           sectionId: section.id,
           siteId,
           publicToken: generatePublicToken(),
+          ...(appointment && { priority: 1, appointmentId: appointment.id }),
           // Hora tomada después del bloqueo: el orden de llegada coincide con el número
           createdAt: new Date(),
         },
@@ -165,7 +166,7 @@ export class TurnsService {
           sectionId: { in: sectionIds },
           ...siteFilter,
         },
-        orderBy: { createdAt: 'asc' },
+        orderBy: [{ priority: 'desc' }, { createdAt: 'asc' }],
         take: WAITING_LIST_MAX,
         include: TURN_INCLUDE,
       }),
@@ -229,7 +230,7 @@ export class TurnsService {
         SELECT id FROM "Turn"
         WHERE status = 'WAITING' AND "serviceDate" = ${today}
           AND "sectionId" IN (${Prisma.join(sectionIds)}) ${siteClause}
-        ORDER BY "createdAt" ASC, number ASC
+        ORDER BY priority DESC, "createdAt" ASC, number ASC
         LIMIT 1
         FOR UPDATE SKIP LOCKED`;
       if (!next) return null;

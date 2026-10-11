@@ -2,6 +2,16 @@ import type { MessageSchema } from '../i18n';
 
 const messages: MessageSchema = {
   errors: {
+    appointmentServiceNotFound: 'Esse serviço não aceita agendamento',
+    appointmentNotFound: 'Agendamento não encontrado',
+    appointmentSlotTaken:
+      'Esse horário não está mais disponível. Escolha outro.',
+    appointmentInvalidState: 'O agendamento não permite mais essa ação',
+    appointmentContactRequired: 'Deixe um telefone ou e-mail para confirmarmos',
+    appointmentOutOfWindow:
+      'É possível agendar de hoje até {days} dias à frente',
+    appointmentInvalid: 'Não foi possível registrar o agendamento',
+    bookingDisabled: 'O agendamento on-line não está ativo',
     sectionNotFound: 'Seção {id} não encontrada',
     sectionInactive: 'A seção {name} está inativa',
     sectionDuplicate: 'Já existe uma seção chamada {name}',
@@ -83,6 +93,22 @@ const messages: MessageSchema = {
     default: '{field} não é válido',
   },
   emails: {
+    appointment: {
+      cta: 'Ver ou cancelar meu agendamento',
+      footer:
+        'Se não puder comparecer, cancele pelo link para liberar o horário.',
+      confirmation: {
+        subject: 'Agendamento confirmado: {service}, {when}',
+        heading: 'Pronto, {name}! Seu horário está confirmado',
+        intro:
+          '{service} com {counter}\n{when}\nAo chegar, avise que tem horário marcado e você será atendido com prioridade.',
+      },
+      reminder: {
+        subject: 'Lembrete: {service}, {when}',
+        heading: 'Esperamos você, {name}',
+        intro: 'Seu horário de {service} com {counter}\n{when}',
+      },
+    },
     common: {
       cta: 'Ver minha solicitação',
       messageTitle: 'Mensagem da equipe de TI',

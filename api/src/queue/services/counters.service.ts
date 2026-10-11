@@ -4,6 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
+import { Prisma } from '@prisma/client';
+
 import { PrismaService } from '../../prisma/prisma.service';
 import { i18nMessage } from '../../i18n';
 import { SitesService } from '../../organization/services';
@@ -16,7 +18,11 @@ export const COUNTER_INCLUDE = {
     select: { id: true, name: true, prefix: true, color: true },
   },
   Site: { select: { id: true, code: true, name: true } },
-} as const;
+  Schedules: {
+    orderBy: [{ weekday: 'asc' }, { startMinute: 'asc' }],
+    select: { weekday: true, startMinute: true, endMinute: true },
+  },
+} satisfies Prisma.CounterInclude;
 
 @Injectable()
 export class CountersService {
@@ -43,6 +49,9 @@ export class CountersService {
         siteId: dto.siteId ?? null,
         isActive: dto.isActive ?? true,
         Sections: { connect: dto.sectionIds.map((id) => ({ id })) },
+        ...(dto.schedules && {
+          Schedules: { create: this.validSchedules(dto.schedules) },
+        }),
       },
       include: COUNTER_INCLUDE,
     });
@@ -61,6 +70,12 @@ export class CountersService {
         ...(dto.name && { name: dto.name.trim() }),
         ...(dto.siteId !== undefined && { siteId: dto.siteId }),
         ...(dto.isActive !== undefined && { isActive: dto.isActive }),
+        ...(dto.schedules && {
+          Schedules: {
+            deleteMany: {},
+            create: this.validSchedules(dto.schedules),
+          },
+        }),
         ...(dto.sectionIds && {
           Sections: {
             set: dto.sectionIds.map((sectionId) => ({ id: sectionId })),
@@ -91,6 +106,19 @@ export class CountersService {
         i18nMessage('errors.counterNotFound', { id }),
       );
     return counter;
+  }
+
+  // Descarta bloques vacíos o invertidos
+  private validSchedules(
+    blocks: { weekday: number; startMinute: number; endMinute: number }[],
+  ) {
+    return blocks
+      .filter((block) => block.endMinute > block.startMinute)
+      .map(({ weekday, startMinute, endMinute }) => ({
+        weekday,
+        startMinute,
+        endMinute,
+      }));
   }
 
   private async assertSections(sectionIds: number[]) {

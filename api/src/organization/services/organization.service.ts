@@ -23,6 +23,7 @@ export class OrganizationService {
       configured: !!organization,
       name: organization?.name ?? null,
       businessType: organization?.businessType ?? null,
+      bookingEnabled: organization?.bookingEnabled ?? false,
     };
   }
 
@@ -34,6 +35,10 @@ export class OrganizationService {
       phone: emptyToNull(dto.phone),
       address: emptyToNull(dto.address),
       website: emptyToNull(dto.website),
+      ...(dto.bookingEnabled !== undefined && {
+        bookingEnabled: dto.bookingEnabled,
+      }),
+      ...(dto.bookingDays !== undefined && { bookingDays: dto.bookingDays }),
       ...(dto.businessType !== undefined && {
         businessType: emptyToNull(dto.businessType),
       }),

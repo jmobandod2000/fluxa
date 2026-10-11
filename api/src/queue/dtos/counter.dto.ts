@@ -1,4 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsArray,
@@ -6,9 +7,32 @@ import {
   IsInt,
   IsOptional,
   IsString,
+  Max,
   MaxLength,
+  Min,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
+
+export class ScheduleBlockDto {
+  @ApiProperty({ description: '0 = domingo … 6 = sábado' })
+  @IsInt()
+  @Min(0)
+  @Max(6)
+  weekday: number;
+
+  @ApiProperty({ description: 'Minutos desde las 00:00', example: 540 })
+  @IsInt()
+  @Min(0)
+  @Max(1440)
+  startMinute: number;
+
+  @ApiProperty({ example: 1080 })
+  @IsInt()
+  @Min(0)
+  @Max(1440)
+  endMinute: number;
+}
 
 export class CreateCounterDto {
   @ApiProperty({ example: 'Mostrador 1' })
@@ -27,6 +51,18 @@ export class CreateCounterDto {
   @ArrayMaxSize(50)
   @IsInt({ each: true })
   sectionIds: number[];
+
+  @ApiProperty({
+    required: false,
+    type: [ScheduleBlockDto],
+    description: 'Horario para citas',
+  })
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(42)
+  @ValidateNested({ each: true })
+  @Type(() => ScheduleBlockDto)
+  schedules?: ScheduleBlockDto[];
 
   @ApiProperty({ required: false })
   @IsOptional()

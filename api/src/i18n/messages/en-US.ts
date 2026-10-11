@@ -2,6 +2,16 @@ import type { MessageSchema } from '../i18n';
 
 const messages: MessageSchema = {
   errors: {
+    appointmentServiceNotFound: 'That service does not take appointments',
+    appointmentNotFound: 'Appointment not found',
+    appointmentSlotTaken:
+      'That time is no longer available. Please pick another.',
+    appointmentInvalidState: 'The appointment no longer allows that action',
+    appointmentContactRequired:
+      'Leave a phone number or email so we can confirm',
+    appointmentOutOfWindow: 'You can book from today up to {days} days ahead',
+    appointmentInvalid: 'The appointment could not be registered',
+    bookingDisabled: 'Online booking is not enabled',
     sectionNotFound: 'Section {id} was not found',
     sectionInactive: 'Section {name} is inactive',
     sectionDuplicate: 'A section named {name} already exists',
@@ -81,6 +91,21 @@ const messages: MessageSchema = {
     default: '{field} is not valid',
   },
   emails: {
+    appointment: {
+      cta: 'View or cancel my appointment',
+      footer: "If you can't make it, cancel from the link to free the slot.",
+      confirmation: {
+        subject: 'Appointment confirmed: {service}, {when}',
+        heading: 'All set, {name}! Your appointment is confirmed',
+        intro:
+          '{service} with {counter}\n{when}\nWhen you arrive, say you have an appointment and you will be served first.',
+      },
+      reminder: {
+        subject: 'Reminder: {service}, {when}',
+        heading: 'See you soon, {name}',
+        intro: 'Your {service} appointment with {counter}\n{when}',
+      },
+    },
     common: {
       cta: 'View my request',
       messageTitle: 'Message from the IT team',

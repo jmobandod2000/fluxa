@@ -38,6 +38,8 @@ export class SectionsService {
         prefix: true,
         description: true,
         color: true,
+        bookable: true,
+        durationMinutes: true,
       },
     });
   }
@@ -52,6 +54,8 @@ export class SectionsService {
         description: emptyToNull(dto.description),
         color: dto.color ?? null,
         sortOrder: dto.sortOrder ?? 0,
+        bookable: dto.bookable ?? false,
+        durationMinutes: dto.durationMinutes ?? 30,
         isActive: dto.isActive ?? true,
       },
     });
@@ -73,6 +77,10 @@ export class SectionsService {
         }),
         ...(dto.color !== undefined && { color: dto.color }),
         ...(dto.sortOrder !== undefined && { sortOrder: dto.sortOrder }),
+        ...(dto.bookable !== undefined && { bookable: dto.bookable }),
+        ...(dto.durationMinutes !== undefined && {
+          durationMinutes: dto.durationMinutes,
+        }),
         ...(dto.isActive !== undefined && { isActive: dto.isActive }),
       },
     });
