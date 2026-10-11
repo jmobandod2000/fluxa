@@ -54,8 +54,8 @@ export default defineConfig(() => {
       config: {
         brand: {
           primary: '#1A4FD6',
-          secondary: '#00A896',
-          accent: '#5B3DF5',
+          secondary: '#F97316',
+          accent: '#EC4899',
           positive: '#2E7D32',
           negative: '#C62828',
           info: '#1976D2',
