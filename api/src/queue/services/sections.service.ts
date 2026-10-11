@@ -11,6 +11,9 @@ import { QueueEventsService } from './queue-events.service';
 
 const emptyToNull = (value?: string | null) => value?.trim() || null;
 
+// Colores para distinguir las secciones sugeridas en kiosco y pantalla
+const PRESET_COLORS = ['#1A4FD6', '#E11D48', '#00A896', '#F59E0B', '#7C3AED'];
+
 @Injectable()
 export class SectionsService {
   constructor(
@@ -102,6 +105,7 @@ export class SectionsService {
             data: {
               name: item.name.trim(),
               prefix: item.prefix.toUpperCase(),
+              color: PRESET_COLORS[index % PRESET_COLORS.length],
               sortOrder: index,
             },
           }),

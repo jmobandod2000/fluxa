@@ -24,8 +24,9 @@ export const usePublicProfile = () => {
 
   const organizationName = computed(() => data.value?.name ?? null);
   const isConfigured = computed(() => data.value?.configured ?? true);
+  const businessType = computed(() => data.value?.businessType ?? null);
 
-  return { organizationName, isConfigured, isFetched };
+  return { organizationName, isConfigured, businessType, isFetched };
 };
 
 export const useOrganization = () => {

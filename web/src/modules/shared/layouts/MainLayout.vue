@@ -36,6 +36,7 @@ watch(
 
 const links: MenuLink[] = [
   { labelKey: 'home.title', icon: 'sym_r_home', to: { name: 'dashboard' } },
+  { labelKey: 'attend.menu', icon: 'sym_r_badge', to: { name: 'attend' } },
   { labelKey: 'nav.users', icon: 'sym_r_group', to: { name: 'users' }, adminOnly: true },
   {
     labelKey: 'nav.settings',

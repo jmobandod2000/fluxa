@@ -6,6 +6,7 @@ export interface Organization {
   phone: string | null;
   address: string | null;
   website: string | null;
+  businessType: string | null;
   updatedAt: string;
 }
 
@@ -16,11 +17,13 @@ export interface OrganizationPayload {
   phone: string | null;
   address: string | null;
   website: string | null;
+  businessType?: string | null;
 }
 
 export interface PublicProfile {
   configured: boolean;
   name: string | null;
+  businessType: string | null;
 }
 
 export interface SiteSummary {
