@@ -49,4 +49,13 @@ export class UpsertOrganizationDto {
   @IsString()
   @MaxLength(120)
   website?: string | null;
+
+  @ApiProperty({
+    description: 'Tipo de negocio (butcher, barbershop, clinic, other...)',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  businessType?: string | null;
 }

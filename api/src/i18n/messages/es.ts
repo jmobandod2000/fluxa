@@ -1,5 +1,15 @@
 export default {
   errors: {
+    sectionNotFound: 'No se encontró la sección {id}',
+    sectionInactive: 'La sección {name} está inactiva',
+    sectionDuplicate: 'Ya existe una sección llamada {name}',
+    sectionPrefixDuplicate: 'El prefijo {prefix} ya lo usa otra sección',
+    sectionInvalid: 'Alguna de las secciones no existe',
+    counterNotFound: 'No se encontró el puesto {id}',
+    counterInactive: 'El puesto {name} está inactivo',
+    counterWithoutSections: 'El puesto {name} no tiene secciones asignadas',
+    turnNotFound: 'No se encontró el turno',
+    turnInvalidState: 'El turno {code} ya no admite esa acción',
     ticketNotFound: 'No se encontró el ticket {term}',
     userNotFound: 'No se encontró el usuario {id}',
     invalidCredentials: 'Correo o contraseña inválidos',

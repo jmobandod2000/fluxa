@@ -22,6 +22,7 @@ export class OrganizationService {
     return {
       configured: !!organization,
       name: organization?.name ?? null,
+      businessType: organization?.businessType ?? null,
     };
   }
 
@@ -33,6 +34,9 @@ export class OrganizationService {
       phone: emptyToNull(dto.phone),
       address: emptyToNull(dto.address),
       website: emptyToNull(dto.website),
+      ...(dto.businessType !== undefined && {
+        businessType: emptyToNull(dto.businessType),
+      }),
     };
 
     return this.prismaService.organization.upsert({

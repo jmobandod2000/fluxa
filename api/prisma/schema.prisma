@@ -24,20 +24,24 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  CalledTurns Turn[]
+
   @@index([isDeleted])
 }
 
 // Datos del negocio (registro único)
 model Organization {
-  id        Int      @id @default(1)
-  name      String
-  taxId     String?
-  email     String?
-  phone     String?
-  address   String?
-  website   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int      @id @default(1)
+  name         String
+  taxId        String?
+  email        String?
+  phone        String?
+  address      String?
+  website      String?
+  // Tipo de negocio elegido en el asistente (butcher, barbershop, clinic...): define vocabulario y secciones sugeridas
+  businessType String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 // Tienda o sucursal
@@ -50,5 +54,79 @@ model Site {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  Counters Counter[]
+  Turns    Turn[]
+
   @@index([isDeleted])
+}
+
+enum TurnStatus {
+  WAITING
+  CALLED
+  DONE
+  NO_SHOW
+  CANCELLED
+}
+
+// Fila de atención (carnicería, corte, lavado...). El prefijo identifica sus números: C-015
+model Section {
+  id          Int      @id @default(autoincrement())
+  name        String
+  prefix      String
+  description String?
+  color       String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Counters Counter[]
+  Turns    Turn[]
+
+  @@index([isDeleted])
+}
+
+// Puesto de atención (mostrador, silla, consultorio, bahía...)
+model Counter {
+  id        Int      @id @default(autoincrement())
+  name      String
+  siteId    Int?
+  isActive  Boolean  @default(true)
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Site     Site?     @relation(fields: [siteId], references: [id])
+  Sections Section[]
+  Turns    Turn[]
+
+  @@index([isDeleted])
+}
+
+// Turno emitido. La numeración se reinicia cada día por sección
+model Turn {
+  id          Int        @id @default(autoincrement())
+  number      Int
+  code        String
+  serviceDate String
+  status      TurnStatus @default(WAITING)
+  sectionId   Int
+  siteId      Int?
+  counterId   Int?
+  calledById  Int?
+  publicToken String     @unique
+  recallCount Int        @default(0)
+  createdAt   DateTime   @default(now())
+  calledAt    DateTime?
+  finishedAt  DateTime?
+
+  Section  Section  @relation(fields: [sectionId], references: [id])
+  Site     Site?    @relation(fields: [siteId], references: [id])
+  Counter  Counter? @relation(fields: [counterId], references: [id])
+  CalledBy User?    @relation(fields: [calledById], references: [id])
+
+  @@unique([sectionId, siteId, serviceDate, number])
+  @@index([serviceDate, status])
+  @@index([siteId, serviceDate])
 }

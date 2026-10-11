@@ -13,6 +13,7 @@ import { OrganizationModule } from './organization/organization.module';
 import { MailModule } from './mail/mail.module';
 import { HealthModule } from './health/health.module';
 import { SystemModule } from './system/system.module';
+import { QueueModule } from './queue/queue.module';
 import { I18nExceptionFilter } from './i18n';
 
 @Module({
@@ -29,6 +30,7 @@ import { I18nExceptionFilter } from './i18n';
     OrganizationModule,
     HealthModule,
     SystemModule,
+    QueueModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: I18nExceptionFilter },

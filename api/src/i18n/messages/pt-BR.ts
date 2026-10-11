@@ -2,6 +2,16 @@ import type { MessageSchema } from '../i18n';
 
 const messages: MessageSchema = {
   errors: {
+    sectionNotFound: 'Seção {id} não encontrada',
+    sectionInactive: 'A seção {name} está inativa',
+    sectionDuplicate: 'Já existe uma seção chamada {name}',
+    sectionPrefixDuplicate: 'O prefixo {prefix} já é usado por outra seção',
+    sectionInvalid: 'Alguma das seções não existe',
+    counterNotFound: 'Guichê {id} não encontrado',
+    counterInactive: 'O guichê {name} está inativo',
+    counterWithoutSections: 'O guichê {name} não tem seções atribuídas',
+    turnNotFound: 'Senha não encontrada',
+    turnInvalidState: 'A senha {code} não permite mais essa ação',
     ticketNotFound: 'Ticket {term} não encontrado',
     userNotFound: 'Usuário {id} não encontrado',
     invalidCredentials: 'E-mail ou senha inválidos',

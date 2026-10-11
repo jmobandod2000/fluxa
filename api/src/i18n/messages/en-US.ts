@@ -2,6 +2,17 @@ import type { MessageSchema } from '../i18n';
 
 const messages: MessageSchema = {
   errors: {
+    sectionNotFound: 'Section {id} was not found',
+    sectionInactive: 'Section {name} is inactive',
+    sectionDuplicate: 'A section named {name} already exists',
+    sectionPrefixDuplicate:
+      'Prefix {prefix} is already used by another section',
+    sectionInvalid: 'One of the sections does not exist',
+    counterNotFound: 'Counter {id} was not found',
+    counterInactive: 'Counter {name} is inactive',
+    counterWithoutSections: 'Counter {name} has no sections assigned',
+    turnNotFound: 'Ticket not found',
+    turnInvalidState: 'Ticket {code} no longer allows that action',
     ticketNotFound: 'Ticket {term} not found',
     userNotFound: 'User {id} not found',
     invalidCredentials: 'Invalid email or password',

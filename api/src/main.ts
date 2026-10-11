@@ -43,7 +43,9 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Turnos API')
-    .setDescription('API de Turnos, sistema de turnos y filas de espera de código abierto')
+    .setDescription(
+      'API de Turnos, sistema de turnos y filas de espera de código abierto',
+    )
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'JWT',
