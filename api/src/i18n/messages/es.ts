@@ -133,7 +133,7 @@ export default {
       footer: 'Si no pediste este enlace, puedes ignorar este correo.',
     },
     test: {
-      subject: 'Correo de prueba de Turnos',
+      subject: 'Correo de prueba de Fluxa',
       heading: 'El correo funciona',
       intro:
         'Si recibes este mensaje, los avisos por correo del portal están bien configurados.',

@@ -32,7 +32,7 @@ export const renderEmail = (content: EmailContent) => {
             <tr>
               <td style="background:#0b2149;padding:18px 24px;color:#ffffff;font-size:15px;font-weight:600;">
                 ${escapeHtml(content.organizationName)}
-                <span style="color:#9fc3ff;font-weight:400;"> · Turnos</span>
+                <span style="color:#9fc3ff;font-weight:400;"> · Fluxa</span>
               </td>
             </tr>
             <tr>

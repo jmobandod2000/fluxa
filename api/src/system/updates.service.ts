@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { APP_VERSION } from '../common/utils/app-version';
 
 const RELEASES_URL =
-  'https://api.github.com/repos/jmobandod2000/turnos/releases/latest';
+  'https://api.github.com/repos/jmobandod2000/fluxa/releases/latest';
 const CACHE_MS = 12 * 60 * 60 * 1000;
 const REQUEST_TIMEOUT_MS = 5000;
 const NOTES_MAX = 2000;
@@ -100,7 +100,7 @@ export class UpdatesService {
       const response = await fetch(RELEASES_URL, {
         headers: {
           Accept: 'application/vnd.github+json',
-          'User-Agent': `Turnos/${APP_VERSION}`,
+          'User-Agent': `Fluxa/${APP_VERSION}`,
         },
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       });

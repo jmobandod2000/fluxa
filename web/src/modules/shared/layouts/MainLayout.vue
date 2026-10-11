@@ -8,7 +8,7 @@ import { OrganizationRoutes } from 'src/modules/organization/interfaces/organiza
 import UpdateBanner from 'src/modules/system/components/UpdateBanner.vue';
 import LanguageSelector from '../components/LanguageSelector.vue';
 import AppFooterLinks from '../components/AppFooterLinks.vue';
-import turnosIcon from 'src/assets/brand/turnos-icon.png';
+import fluxaIcon from 'src/assets/brand/fluxa-icon.png';
 
 interface MenuLink {
   labelKey: string;
@@ -55,7 +55,7 @@ const visibleLinks = computed(() => links.filter((link) => !link.adminOnly || is
       <q-toolbar>
         <q-btn flat dense round icon="sym_r_menu" @click="isDrawerOpen = !isDrawerOpen" />
         <q-toolbar-title class="text-weight-medium row items-center no-wrap">
-          <img :src="turnosIcon" alt="" style="width: 30px; height: 30px" class="q-mr-sm" />
+          <img :src="fluxaIcon" alt="" style="width: 30px; height: 30px" class="q-mr-sm" />
           <span>{{ t('app.name') }}</span>
           <template v-if="organizationName">
             <q-separator vertical dark inset class="q-mx-sm gt-xs" />

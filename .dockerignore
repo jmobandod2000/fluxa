@@ -12,7 +12,7 @@
 .github
 docs
 assets
-turnos-mcp
+fluxa-mcp
 backups
 api/prisma/data/*.local.ts
 api/scripts

@@ -135,7 +135,7 @@ const messages: MessageSchema = {
       footer: 'Se você não pediu este link, pode ignorar este e-mail.',
     },
     test: {
-      subject: 'E-mail de teste do Turnos',
+      subject: 'E-mail de teste do Fluxa',
       heading: 'O e-mail está funcionando',
       intro:
         'Se você recebeu esta mensagem, os avisos por e-mail do portal estão configurados corretamente.',

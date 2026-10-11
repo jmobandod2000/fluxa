@@ -1,8 +1,8 @@
 {
-  "name": "turnos-web",
+  "name": "fluxa-web",
   "version": "0.1.0",
-  "description": "Turnos: sistema de turnos y filas de espera open source y autoalojado",
-  "productName": "Turnos",
+  "description": "Fluxa: sistema de turnos y filas de espera open source y autoalojado",
+  "productName": "Fluxa",
   "type": "module",
   "private": true,
   "author": "Juan M. Obando",

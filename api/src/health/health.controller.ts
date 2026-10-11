@@ -9,7 +9,7 @@ import { APP_VERSION } from '../common/utils/app-version';
 export class HealthController {
   constructor(private readonly prismaService: PrismaService) {}
 
-  // Usado por el healthcheck de Docker y por `turnos status`.
+  // Usado por el healthcheck de Docker y por `fluxa status`.
   @Get()
   async check() {
     await this.prismaService.$queryRaw`SELECT 1`;

@@ -1,6 +1,6 @@
 export default {
   app: {
-    name: 'Turnos',
+    name: 'Fluxa',
     subtitle: 'Sistema de turnos',
   },
   language: {
@@ -337,7 +337,7 @@ export default {
     current: 'tienes la {version}',
     whatsNew: 'Ver novedades',
     how: 'Cómo actualizar',
-    howTo: 'En el servidor donde está instalado Turnos, dentro de su carpeta, ejecuta:',
+    howTo: 'En el servidor donde está instalado Fluxa, dentro de su carpeta, ejecuta:',
     safe: 'Hace un respaldo de la base antes de actualizar y conserva todos los datos.',
     dismiss: 'Ocultar',
     upToDate: 'Al día',
@@ -871,7 +871,7 @@ export default {
       },
       private: {
         title: 'Tus datos, en casa',
-        text: 'Turnos corre en los servidores de tu empresa.',
+        text: 'Fluxa corre en los servidores de tu empresa.',
       },
     },
   },

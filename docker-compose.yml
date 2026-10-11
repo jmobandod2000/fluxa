@@ -1,16 +1,16 @@
-# Turnos en producción: base de datos + aplicación (API y web en un solo servicio).
-# Lo normal es usar ./turnos install (o turnos.cmd install en Windows), que genera el .env.
+# Fluxa en producción: base de datos + aplicación (API y web en un solo servicio).
+# Lo normal es usar ./fluxa install (o fluxa.cmd install en Windows), que genera el .env.
 # A mano: copia .env.example a .env, cambia las contraseñas y ejecuta: docker compose up -d
 
-name: turnos
+name: fluxa
 
 services:
   db:
     image: postgres:17.4
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_NAME:-turnos}
-      POSTGRES_USER: ${DB_USER:-turnos}
+      POSTGRES_DB: ${DB_NAME:-fluxa}
+      POSTGRES_USER: ${DB_USER:-fluxa}
       POSTGRES_PASSWORD: ${DB_PASSWORD:?Falta DB_PASSWORD en .env}
       TZ: ${TZ:-UTC}
     volumes:
@@ -22,14 +22,14 @@ services:
       retries: 10
 
   app:
-    image: ${TURNOS_IMAGE:-ghcr.io/jmobandod2000/turnos}:${TURNOS_VERSION:-latest}
+    image: ${FLUXA_IMAGE:-ghcr.io/jmobandod2000/fluxa}:${FLUXA_VERSION:-latest}
     build: .
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${DB_USER:-turnos}:${DB_PASSWORD}@db:5432/${DB_NAME:-turnos}?schema=public
+      DATABASE_URL: postgresql://${DB_USER:-fluxa}:${DB_PASSWORD}@db:5432/${DB_NAME:-fluxa}?schema=public
       JWT_SECRET: ${JWT_SECRET:?Falta JWT_SECRET en .env}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-12h}
       LOGIN_NAME: ${LOGIN_NAME:-Administrador}
@@ -45,7 +45,7 @@ services:
       UPDATE_CHECK: ${UPDATE_CHECK:-true}
       TZ: ${TZ:-UTC}
     ports:
-      - ${TURNOS_BIND:-0.0.0.0}:${TURNOS_PORT:-8081}:3010
+      - ${FLUXA_BIND:-0.0.0.0}:${FLUXA_PORT:-8081}:3010
 
   # Buzón de pruebas (opcional): docker compose --profile mail up -d  →  http://localhost:8025
   mail:

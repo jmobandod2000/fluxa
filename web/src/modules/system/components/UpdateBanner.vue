@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n';
 import useNotify from 'src/modules/shared/composables/useNotify';
 import useUpdateStatus from '../composables/useUpdateStatus';
 
-const UPDATE_COMMAND = 'turnos update';
+const UPDATE_COMMAND = 'fluxa update';
 
 const { t } = useI18n();
 const { successNotify } = useNotify();

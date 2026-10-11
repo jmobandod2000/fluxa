@@ -2,7 +2,7 @@ import type { MessageSchema } from './index';
 
 const messages: MessageSchema = {
   app: {
-    name: 'Turnos',
+    name: 'Fluxa',
     subtitle: 'Queue management',
   },
   language: {
@@ -338,7 +338,7 @@ const messages: MessageSchema = {
     current: 'you have {version}',
     whatsNew: "What's new",
     how: 'How to update',
-    howTo: 'On the server where Turnos is installed, inside its folder, run:',
+    howTo: 'On the server where Fluxa is installed, inside its folder, run:',
     safe: 'It backs up the database before updating and keeps all data.',
     dismiss: 'Hide',
     upToDate: 'Up to date',
@@ -869,7 +869,7 @@ const messages: MessageSchema = {
       },
       private: {
         title: 'Your data stays home',
-        text: 'Turnos runs on your company’s own servers.',
+        text: 'Fluxa runs on your company’s own servers.',
       },
     },
   },

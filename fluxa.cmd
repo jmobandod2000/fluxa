@@ -1,12 +1,12 @@
 @echo off
-rem Turnos: turnos ^<comando^>   (turnos help para ver todos)
+rem Fluxa: fluxa ^<comando^>   (fluxa help para ver todos)
 rem Usa Node si esta instalado; si no, solo hace falta Docker Desktop.
 setlocal
 cd /d "%~dp0"
 set "NODE_IMAGE=node:24.13.1-alpine"
 where node >nul 2>nul
 if %errorlevel%==0 (
-  node cli\turnos.mjs %*
+  node cli\fluxa.mjs %*
   exit /b %errorlevel%
 )
 set "CMD=%~1"
@@ -23,8 +23,8 @@ echo Comandos sin Node: install, config, start, stop, restart, status, logs, upd
 echo Para backup, restore y dev instala Node 18+ (https://nodejs.org).
 exit /b
 :configure
-docker run --rm -it -v "%cd%:/work" -w /work "%NODE_IMAGE%" node cli/turnos.mjs %CMD% --env-only || exit /b 1
-findstr /b /c:"TURNOS_BUILD=true" .env >nul && (docker compose build app) || (docker compose pull app || docker compose build app)
+docker run --rm -it -v "%cd%:/work" -w /work "%NODE_IMAGE%" node cli/fluxa.mjs %CMD% --env-only || exit /b 1
+findstr /b /c:"FLUXA_BUILD=true" .env >nul && (docker compose build app) || (docker compose pull app || docker compose build app)
 docker compose up -d db app
 exit /b
 :update

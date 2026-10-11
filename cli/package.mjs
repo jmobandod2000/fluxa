@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Arma el paquete de instalación (sin código fuente) para GitHub Releases.
-// Uso: node cli/package.mjs 1.0.0   →   release/turnos-1.0.0/
+// Uso: node cli/package.mjs 1.0.0   →   release/fluxa-1.0.0/
 
 import { chmodSync, copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -13,14 +13,14 @@ if (!/^\d+\.\d+\.\d+/.test(version)) {
   process.exit(1);
 }
 
-const name = `turnos-${version}`;
+const name = `fluxa-${version}`;
 const out = join(ROOT, 'release', name);
 rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, 'cli'), { recursive: true });
 
-for (const file of ['turnos', 'turnos.cmd', 'cli/turnos.mjs', '.env.example', 'LICENSE', 'NOTICE'])
+for (const file of ['fluxa', 'fluxa.cmd', 'cli/fluxa.mjs', '.env.example', 'LICENSE', 'NOTICE'])
   copyFileSync(join(ROOT, file), join(out, file));
-chmodSync(join(out, 'turnos'), 0o755);
+chmodSync(join(out, 'fluxa'), 0o755);
 
 // Sin código fuente no hay qué compilar: la imagen siempre se descarga
 const compose = readFileSync(join(ROOT, 'docker-compose.yml'), 'utf8').replace(/^\s+build: \.\r?\n/m, '');
@@ -29,26 +29,26 @@ writeFileSync(join(out, 'docker-compose.yml'), compose);
 
 writeFileSync(
   join(out, 'INSTALL.md'),
-  `# Turnos ${version}
+  `# Fluxa ${version}
 
 Requisito único: Docker (Docker Desktop en Windows/macOS, Docker Engine en Linux).
 
 ## Instalar
 
-- **Windows:** abre esta carpeta en la terminal y ejecuta \`turnos install\` (en PowerShell: \`.\\turnos install\`).
-- **Linux / macOS:** \`./turnos install\`
+- **Windows:** abre esta carpeta en la terminal y ejecuta \`fluxa install\` (en PowerShell: \`.\\fluxa install\`).
+- **Linux / macOS:** \`./fluxa install\`
 
 El asistente configura todo y al final muestra la dirección de la app y el usuario administrador.
 
 ## Comandos
 
-\`turnos start\` · \`stop\` · \`status\` · \`logs\` · \`backup\` · \`restore <archivo>\` · \`update\` · \`config\` · \`db\` · \`help\`
+\`fluxa start\` · \`stop\` · \`status\` · \`logs\` · \`backup\` · \`restore <archivo>\` · \`update\` · \`config\` · \`db\` · \`help\`
 
-Documentación completa: https://github.com/jmobandod2000/turnos
+Documentación completa: https://github.com/jmobandod2000/fluxa
 
 ---
 
-**English:** the only requirement is Docker. Run \`turnos install\` (Windows) or \`./turnos install\` (Linux/macOS) and follow the wizard. Set \`TURNOS_LANG=en\` for English prompts.
+**English:** the only requirement is Docker. Run \`fluxa install\` (Windows) or \`./fluxa install\` (Linux/macOS) and follow the wizard. Set \`FLUXA_LANG=en\` for English prompts.
 `,
 );
 

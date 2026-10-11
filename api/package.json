@@ -1,8 +1,8 @@
 {
-  "name": "turnos-api",
+  "name": "fluxa-api",
   "version": "0.1.0",
-  "description": "Turnos: sistema de turnos y filas de espera open source y autoalojado",
-  "productName": "Turnos",
+  "description": "Fluxa: sistema de turnos y filas de espera open source y autoalojado",
+  "productName": "Fluxa",
   "private": true,
   "author": "Juan M. Obando",
   "license": "Apache-2.0",

@@ -2,7 +2,7 @@ import type { MessageSchema } from './index';
 
 const messages: MessageSchema = {
   app: {
-    name: 'Turnos',
+    name: 'Fluxa',
     subtitle: 'Sistema de senhas',
   },
   language: {
@@ -339,7 +339,7 @@ const messages: MessageSchema = {
     current: 'você tem a {version}',
     whatsNew: 'Ver novidades',
     how: 'Como atualizar',
-    howTo: 'No servidor onde o Turnos está instalado, dentro da pasta dele, execute:',
+    howTo: 'No servidor onde o Fluxa está instalado, dentro da pasta dele, execute:',
     safe: 'Faz um backup do banco antes de atualizar e mantém todos os dados.',
     dismiss: 'Ocultar',
     upToDate: 'Atualizado',
@@ -871,7 +871,7 @@ const messages: MessageSchema = {
       },
       private: {
         title: 'Seus dados em casa',
-        text: 'O Turnos roda nos servidores da sua empresa.',
+        text: 'O Fluxa roda nos servidores da sua empresa.',
       },
     },
   },

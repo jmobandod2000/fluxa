@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Turnos CLI: instala, arranca y mantiene Turnos con Docker. Sin dependencias (Node 18+).
-// Uso: ./turnos <comando>   (Windows: turnos <comando>)
+// Fluxa CLI: instala, arranca y mantiene Fluxa con Docker. Sin dependencias (Node 18+).
+// Uso: ./fluxa <comando>   (Windows: fluxa <comando>)
 
 import { spawn, spawnSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
@@ -16,14 +16,14 @@ const BACKUP_DIR = join(ROOT, 'backups');
 const BACK_DIR = join(ROOT, 'api');
 const FRONT_DIR = join(ROOT, 'web');
 const OVERRIDE_FILE = join(ROOT, 'docker-compose.override.yml');
-const OVERRIDE_MARK = '# Generado por turnos';
+const OVERRIDE_MARK = '# Generado por fluxa';
 // Paquete de instalación (sin código fuente): no se puede compilar la imagen ni usar el modo desarrollo
 const CAN_BUILD = existsSync(join(ROOT, 'Dockerfile'));
 const HAS_SOURCE = existsSync(BACK_DIR) && existsSync(FRONT_DIR);
 const HEALTH_TIMEOUT_MS = 180_000;
 const SAFE_VALUE = /^[A-Za-z0-9_./:@+-]*$/;
 
-const LANG = (process.env.TURNOS_LANG || process.env.LANG || Intl.DateTimeFormat().resolvedOptions().locale || 'es')
+const LANG = (process.env.FLUXA_LANG || process.env.LANG || Intl.DateTimeFormat().resolvedOptions().locale || 'es')
   .toLowerCase()
   .startsWith('en')
   ? 'en'
@@ -31,13 +31,13 @@ const LANG = (process.env.TURNOS_LANG || process.env.LANG || Intl.DateTimeFormat
 
 const MSG = {
   es: {
-    title: 'Turnos · sistema de turnos',
+    title: 'Fluxa · sistema de turnos',
     help: `Comandos:
-  install         Asistente: configura .env y levanta Turnos (solo la primera vez)
+  install         Asistente: configura .env y levanta Fluxa (solo la primera vez)
   config          Cambia la configuración (puerto, administrador, correo) y reinicia
-  start           Inicia Turnos
-  stop            Detiene Turnos (los datos se conservan)
-  restart         Reinicia Turnos
+  start           Inicia Fluxa
+  stop            Detiene Fluxa (los datos se conservan)
+  restart         Reinicia Fluxa
   status          Estado de los servicios
   logs            Registros de la aplicación en vivo (Ctrl+C para salir)
   update          Respaldo + descarga de la última versión + reinicio
@@ -48,7 +48,7 @@ const MSG = {
   help            Esta ayuda`,
     noDocker: 'No se encontró Docker. Instálalo desde https://docs.docker.com/get-docker/ y vuelve a intentarlo.',
     dockerDown: 'Docker está instalado pero no responde. Abre Docker Desktop (o inicia el servicio) y vuelve a intentarlo.',
-    noEnv: 'Aún no hay configuración. Ejecuta primero: turnos install',
+    noEnv: 'Aún no hay configuración. Ejecuta primero: fluxa install',
     envExists: 'Ya existe un .env. ¿Quieres reconfigurarlo? Los valores actuales se ofrecen por defecto',
     keepEnv: 'Se conserva la configuración actual.',
     sectionServer: 'Servidor',
@@ -56,7 +56,7 @@ const MSG = {
     sectionMail: 'Correo para avisar al solicitante del portal (opcional)',
     port: 'Puerto web',
     bind: '¿Acceso desde toda la red? (no = solo este equipo, útil detrás de un proxy HTTPS)',
-    appUrl: 'Dirección con la que los usuarios abrirán Turnos',
+    appUrl: 'Dirección con la que los usuarios abrirán Fluxa',
     tz: 'Zona horaria',
     adminName: 'Nombre',
     adminEmail: 'Correo (será tu usuario)',
@@ -65,7 +65,7 @@ const MSG = {
     noQuotes: "No uses comillas simples (').",
     invalidEmail: 'Correo no válido.',
     invalidPort: 'Puerto no válido (1-65535).',
-    useMail: '¿Configurar correo ahora? (se puede hacer después con: turnos config)',
+    useMail: '¿Configurar correo ahora? (se puede hacer después con: fluxa config)',
     smtpHost: 'Servidor SMTP (ej. smtp.office365.com)',
     smtpPort: 'Puerto SMTP',
     smtpSecure: '¿Conexión SSL directa? (sí para 465, no para 587)',
@@ -74,23 +74,23 @@ const MSG = {
     mailFrom: 'Remitente',
     image: '¿Descargar la imagen lista? (no = compilarla en este equipo, tarda varios minutos)',
     envSaved: 'Configuración guardada en .env',
-    pulling: 'Descargando Turnos...',
+    pulling: 'Descargando Fluxa...',
     pullFailed: 'No se pudo descargar la imagen; se compila en este equipo (puede tardar unos minutos)...',
-    building: 'Compilando Turnos...',
+    building: 'Compilando Fluxa...',
     starting: 'Iniciando servicios...',
-    waiting: 'Esperando a que Turnos responda',
-    ready: 'Turnos está listo',
-    notReady: 'Turnos no respondió a tiempo. Revisa los registros con: turnos logs',
+    waiting: 'Esperando a que Fluxa responda',
+    ready: 'Fluxa está listo',
+    notReady: 'Fluxa no respondió a tiempo. Revisa los registros con: fluxa logs',
     openAt: 'Abre',
     loginWith: 'Entra con',
     generatedPassword: 'Contraseña generada (guárdala, no se vuelve a mostrar)',
     nextSteps: 'La primera vez, el asistente de la app te pedirá los datos de la empresa, las sedes y las categorías.',
-    stopped: 'Turnos detenido. Los datos se conservan.',
+    stopped: 'Fluxa detenido. Los datos se conservan.',
     backupDone: 'Respaldo creado',
     restoreConfirm: 'Esto REEMPLAZA todos los datos actuales por los del respaldo. Escribe RESTAURAR para continuar',
     restoreCancelled: 'Restauración cancelada.',
     restoreDone: 'Respaldo restaurado.',
-    restoreMissing: 'Indica un archivo existente: turnos restore backups/archivo.dump',
+    restoreMissing: 'Indica un archivo existente: fluxa restore backups/archivo.dump',
     updateGit: 'Actualizando el código (git pull)...',
     devNeedsPnpm: 'El modo desarrollo necesita pnpm: npm install -g pnpm',
     devEnvCreated: 'Se creó api/.env con valores de desarrollo.',
@@ -105,19 +105,19 @@ const MSG = {
     dbAccess: '¿Permitir conectarse a la base desde este equipo con TablePlus, DBeaver o pgAdmin?',
     dbPort: 'Puerto local de PostgreSQL',
     dbTitle: 'Conexión a la base de datos (PostgreSQL)',
-    dbNotExposed: 'La base no está publicada. Actívala con: turnos config (pregunta "Acceso a la base de datos")',
+    dbNotExposed: 'La base no está publicada. Actívala con: fluxa config (pregunta "Acceso a la base de datos")',
     dbOnlyLocal: 'Solo acepta conexiones desde este equipo. Desde otro, usa un túnel SSH.',
     pullFailedNoBuild: 'No se pudo descargar la imagen. Revisa la conexión a Internet y vuelve a intentarlo.',
-    devNeedsSource: 'El modo desarrollo necesita el código fuente: git clone https://github.com/jmobandod2000/turnos.git',
+    devNeedsSource: 'El modo desarrollo necesita el código fuente: git clone https://github.com/jmobandod2000/fluxa.git',
   },
   en: {
-    title: 'Turnos · queue management',
+    title: 'Fluxa · queue management',
     help: `Commands:
-  install         Wizard: creates .env and starts Turnos (first time only)
+  install         Wizard: creates .env and starts Fluxa (first time only)
   config          Change settings (port, admin, email) and restart
-  start           Start Turnos
-  stop            Stop Turnos (data is kept)
-  restart         Restart Turnos
+  start           Start Fluxa
+  stop            Stop Fluxa (data is kept)
+  restart         Restart Fluxa
   status          Service status
   logs            Live application logs (Ctrl+C to exit)
   update          Backup + pull the latest version + restart
@@ -128,7 +128,7 @@ const MSG = {
   help            This help`,
     noDocker: 'Docker was not found. Install it from https://docs.docker.com/get-docker/ and try again.',
     dockerDown: 'Docker is installed but not responding. Open Docker Desktop (or start the service) and try again.',
-    noEnv: 'No configuration yet. Run first: turnos install',
+    noEnv: 'No configuration yet. Run first: fluxa install',
     envExists: 'A .env already exists. Reconfigure it? Current values are offered as defaults',
     keepEnv: 'Keeping the current configuration.',
     sectionServer: 'Server',
@@ -136,7 +136,7 @@ const MSG = {
     sectionMail: 'Email to notify portal requesters (optional)',
     port: 'Web port',
     bind: 'Allow access from the whole network? (no = this machine only, useful behind an HTTPS proxy)',
-    appUrl: 'Address users will open Turnos with',
+    appUrl: 'Address users will open Fluxa with',
     tz: 'Time zone',
     adminName: 'Name',
     adminEmail: 'Email (your username)',
@@ -145,7 +145,7 @@ const MSG = {
     noQuotes: "Do not use single quotes (').",
     invalidEmail: 'Invalid email.',
     invalidPort: 'Invalid port (1-65535).',
-    useMail: 'Configure email now? (can be done later with: turnos config)',
+    useMail: 'Configure email now? (can be done later with: fluxa config)',
     smtpHost: 'SMTP server (e.g. smtp.office365.com)',
     smtpPort: 'SMTP port',
     smtpSecure: 'Direct SSL connection? (yes for 465, no for 587)',
@@ -154,23 +154,23 @@ const MSG = {
     mailFrom: 'Sender',
     image: 'Download the ready-made image? (no = build it on this machine, takes several minutes)',
     envSaved: 'Configuration saved to .env',
-    pulling: 'Downloading Turnos...',
+    pulling: 'Downloading Fluxa...',
     pullFailed: 'Could not download the image; building it on this machine (may take a few minutes)...',
-    building: 'Building Turnos...',
+    building: 'Building Fluxa...',
     starting: 'Starting services...',
-    waiting: 'Waiting for Turnos to respond',
-    ready: 'Turnos is ready',
-    notReady: 'Turnos did not respond in time. Check the logs with: turnos logs',
+    waiting: 'Waiting for Fluxa to respond',
+    ready: 'Fluxa is ready',
+    notReady: 'Fluxa did not respond in time. Check the logs with: fluxa logs',
     openAt: 'Open',
     loginWith: 'Sign in with',
     generatedPassword: 'Generated password (save it, it will not be shown again)',
     nextSteps: 'On first sign-in, the app wizard asks for the company, sites and categories.',
-    stopped: 'Turnos stopped. Data is kept.',
+    stopped: 'Fluxa stopped. Data is kept.',
     backupDone: 'Backup created',
     restoreConfirm: 'This REPLACES all current data with the backup. Type RESTORE to continue',
     restoreCancelled: 'Restore cancelled.',
     restoreDone: 'Backup restored.',
-    restoreMissing: 'Pass an existing file: turnos restore backups/file.dump',
+    restoreMissing: 'Pass an existing file: fluxa restore backups/file.dump',
     updateGit: 'Updating the code (git pull)...',
     devNeedsPnpm: 'Development mode needs pnpm: npm install -g pnpm',
     devEnvCreated: 'Created api/.env with development values.',
@@ -185,10 +185,10 @@ const MSG = {
     dbAccess: 'Allow connecting to the database from this machine with TablePlus, DBeaver or pgAdmin?',
     dbPort: 'Local PostgreSQL port',
     dbTitle: 'Database connection (PostgreSQL)',
-    dbNotExposed: 'The database is not published. Enable it with: turnos config ("Database access")',
+    dbNotExposed: 'The database is not published. Enable it with: fluxa config ("Database access")',
     dbOnlyLocal: 'Only accepts connections from this machine. From another one, use an SSH tunnel.',
     pullFailedNoBuild: 'Could not download the image. Check the Internet connection and try again.',
-    devNeedsSource: 'Development mode needs the source code: git clone https://github.com/jmobandod2000/turnos.git',
+    devNeedsSource: 'Development mode needs the source code: git clone https://github.com/jmobandod2000/fluxa.git',
   },
 }[LANG];
 
@@ -249,7 +249,7 @@ const formatValue = (value) => (SAFE_VALUE.test(value) ? value : `'${value}'`);
 
 const writeEnv = (values) => {
   const lines = [
-    '# Turnos — generado por `turnos install`. Cambia valores con: turnos config',
+    '# Fluxa — generado por `fluxa install`. Cambia valores con: fluxa config',
     '',
     ...Object.entries(values).map(([key, value]) => `${key}=${formatValue(String(value ?? ''))}`),
     '',
@@ -262,7 +262,7 @@ const writeEnv = (values) => {
   }
 };
 
-const appPort = () => readEnv().TURNOS_PORT || '8081';
+const appPort = () => readEnv().FLUXA_PORT || '8081';
 
 const waitForHealth = async (port = appPort()) => {
   process.stdout.write(`${blue('›')} ${MSG.waiting}`);
@@ -361,7 +361,7 @@ const writeDbOverride = (env) => {
   if (env.DB_EXPOSE_PORT) {
     writeFileSync(
       OVERRIDE_FILE,
-      `${OVERRIDE_MARK} (turnos config). Publica PostgreSQL solo en este equipo.\nservices:\n  db:\n    ports:\n      - 127.0.0.1:${env.DB_EXPOSE_PORT}:5432\n`,
+      `${OVERRIDE_MARK} (fluxa config). Publica PostgreSQL solo en este equipo.\nservices:\n  db:\n    ports:\n      - 127.0.0.1:${env.DB_EXPOSE_PORT}:5432\n`,
       'utf8',
     );
     return;
@@ -385,10 +385,10 @@ const wizard = async () => {
     }
 
     section(MSG.sectionServer);
-    const port = await prompt.ask(MSG.port, current.TURNOS_PORT || '8081', isPort);
-    const network = await prompt.confirm(MSG.bind, (current.TURNOS_BIND || '0.0.0.0') === '0.0.0.0');
+    const port = await prompt.ask(MSG.port, current.FLUXA_PORT || '8081', isPort);
+    const network = await prompt.confirm(MSG.bind, (current.FLUXA_BIND || '0.0.0.0') === '0.0.0.0');
     const defaultUrl = current.APP_URL
-      ? current.APP_URL.replace(new RegExp(`:${current.TURNOS_PORT || 8081}(?=/|$)`), `:${port}`)
+      ? current.APP_URL.replace(new RegExp(`:${current.FLUXA_PORT || 8081}(?=/|$)`), `:${port}`)
       : `http://${network ? hostname().toLowerCase() : 'localhost'}:${port}`;
     const appUrl = await prompt.ask(MSG.appUrl, defaultUrl, noQuote);
     const tz = await prompt.ask(MSG.tz, current.TZ || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC', noQuote);
@@ -426,7 +426,7 @@ const wizard = async () => {
       mail.SMTP_USER = await prompt.ask(MSG.smtpUser, mail.SMTP_USER, noQuote);
       const pass = await prompt.secretInput(MSG.smtpPass);
       if (pass) mail.SMTP_PASS = pass;
-      mail.MAIL_FROM = await prompt.ask(MSG.mailFrom, mail.MAIL_FROM || `Turnos <${mail.SMTP_USER || adminEmail}>`, noQuote);
+      mail.MAIL_FROM = await prompt.ask(MSG.mailFrom, mail.MAIL_FROM || `Fluxa <${mail.SMTP_USER || adminEmail}>`, noQuote);
     }
 
     section(MSG.sectionDb);
@@ -434,18 +434,18 @@ const wizard = async () => {
     const dbPort = dbAccess ? await prompt.ask(MSG.dbPort, current.DB_EXPOSE_PORT || '5433', isPort) : '';
 
     console.log('');
-    const prebuilt = CAN_BUILD ? await prompt.confirm(MSG.image, (current.TURNOS_BUILD || 'false') !== 'true') : true;
+    const prebuilt = CAN_BUILD ? await prompt.confirm(MSG.image, (current.FLUXA_BUILD || 'false') !== 'true') : true;
 
     const values = {
       ...current,
-      TURNOS_PORT: port,
-      TURNOS_BIND: network ? '0.0.0.0' : '127.0.0.1',
-      TURNOS_VERSION: current.TURNOS_VERSION || 'latest',
-      TURNOS_BUILD: String(!prebuilt),
+      FLUXA_PORT: port,
+      FLUXA_BIND: network ? '0.0.0.0' : '127.0.0.1',
+      FLUXA_VERSION: current.FLUXA_VERSION || 'latest',
+      FLUXA_BUILD: String(!prebuilt),
       APP_URL: appUrl,
       TZ: tz,
-      DB_NAME: current.DB_NAME || 'turnos',
-      DB_USER: current.DB_USER || 'turnos',
+      DB_NAME: current.DB_NAME || 'fluxa',
+      DB_USER: current.DB_USER || 'fluxa',
       DB_PASSWORD: current.DB_PASSWORD || secret(18),
       JWT_SECRET: current.JWT_SECRET || secret(32),
       JWT_EXPIRES_IN: current.JWT_EXPIRES_IN || '12h',
@@ -466,7 +466,7 @@ const wizard = async () => {
 
 // ---------- comandos ----------
 const prepareImage = (env) => {
-  if (env.TURNOS_BUILD === 'true') {
+  if (env.FLUXA_BUILD === 'true') {
     info(MSG.building);
     if (compose(['build', 'app']).status !== 0) process.exit(1);
     return;
@@ -481,13 +481,13 @@ const prepareImage = (env) => {
 const up = async (env) => {
   info(MSG.starting);
   if (compose(['up', '-d', '--no-build', 'db', 'app']).status !== 0) process.exit(1);
-  const healthy = await waitForHealth(env.TURNOS_PORT);
+  const healthy = await waitForHealth(env.FLUXA_PORT);
   if (!healthy) fail(MSG.notReady);
   ok(MSG.ready);
 };
 
 const summary = (env, generatedPassword) => {
-  const url = env.APP_URL || `http://localhost:${env.TURNOS_PORT}`;
+  const url = env.APP_URL || `http://localhost:${env.FLUXA_PORT}`;
   console.log(`\n  ${MSG.openAt}  ${bold(url)}`);
   console.log(`  ${MSG.loginWith} ${bold(env.LOGIN_EMAIL)}`);
   if (generatedPassword) console.log(`  ${MSG.generatedPassword}: ${bold(generatedPassword)}`);
@@ -544,7 +544,7 @@ const commands = {
     ensureDocker();
     const env = requireEnv();
     compose(['restart', 'app']);
-    if (await waitForHealth(env.TURNOS_PORT)) ok(MSG.ready);
+    if (await waitForHealth(env.FLUXA_PORT)) ok(MSG.ready);
     else fail(MSG.notReady);
   },
 
@@ -553,7 +553,7 @@ const commands = {
     const env = requireEnv();
     compose(['ps']);
     try {
-      const response = await fetch(`http://127.0.0.1:${env.TURNOS_PORT || 8081}/api/health`, {
+      const response = await fetch(`http://127.0.0.1:${env.FLUXA_PORT || 8081}/api/health`, {
         signal: AbortSignal.timeout(3000),
       });
       const body = await response.json();
@@ -573,10 +573,10 @@ const commands = {
     const env = requireEnv();
     mkdirSync(BACKUP_DIR, { recursive: true });
     const stamp = new Date().toISOString().replace(/[-:]/g, '').replace('T', '_').slice(0, 13);
-    const file = join(BACKUP_DIR, `turnos_${stamp}.dump`);
+    const file = join(BACKUP_DIR, `fluxa_${stamp}.dump`);
     const dump = spawnSync(
       'docker',
-      ['compose', 'exec', '-T', 'db', 'pg_dump', '-U', env.DB_USER || 'turnos', '-d', env.DB_NAME || 'turnos', '-Fc'],
+      ['compose', 'exec', '-T', 'db', 'pg_dump', '-U', env.DB_USER || 'fluxa', '-d', env.DB_NAME || 'fluxa', '-Fc'],
       { cwd: ROOT, maxBuffer: 1024 * 1024 * 1024 },
     );
     if (dump.status !== 0) fail(dump.stderr?.toString() || 'pg_dump');
@@ -602,7 +602,7 @@ const commands = {
       'docker',
       [
         'compose', 'exec', '-T', 'db', 'pg_restore', '--clean', '--if-exists', '--no-owner',
-        '-U', env.DB_USER || 'turnos', '-d', env.DB_NAME || 'turnos',
+        '-U', env.DB_USER || 'fluxa', '-d', env.DB_NAME || 'fluxa',
       ],
       { cwd: ROOT, input: readFileSync(file), stdio: ['pipe', 'inherit', 'inherit'] },
     );
@@ -689,8 +689,8 @@ const commands = {
       warn(MSG.dbNotExposed);
       return;
     }
-    const user = env.DB_USER || 'turnos';
-    const database = env.DB_NAME || 'turnos';
+    const user = env.DB_USER || 'fluxa';
+    const database = env.DB_NAME || 'fluxa';
     console.log(`\n${bold(MSG.dbTitle)}`);
     console.log(`  Host      127.0.0.1`);
     console.log(`  Port      ${env.DB_EXPOSE_PORT}`);

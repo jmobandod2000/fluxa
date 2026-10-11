@@ -1,6 +1,6 @@
 name: Paquete de instalación
 
-# Adjunta a cada Release el paquete listo para usar (sin código fuente): turnos, compose y .env.example
+# Adjunta a cada Release el paquete listo para usar (sin código fuente): fluxa, compose y .env.example
 on:
   release:
     types: [published]
@@ -25,9 +25,9 @@ jobs:
           VERSION="${TAG#v}"
           node cli/package.mjs "$VERSION"
           cd release
-          zip -qr "turnos-$VERSION.zip" "turnos-$VERSION"
-          tar -czf "turnos-$VERSION.tar.gz" "turnos-$VERSION"
-          sha256sum "turnos-$VERSION.zip" "turnos-$VERSION.tar.gz" > "turnos-$VERSION.sha256"
+          zip -qr "fluxa-$VERSION.zip" "fluxa-$VERSION"
+          tar -czf "fluxa-$VERSION.tar.gz" "fluxa-$VERSION"
+          sha256sum "fluxa-$VERSION.zip" "fluxa-$VERSION.tar.gz" > "fluxa-$VERSION.sha256"
 
       - name: Subir al Release
         env:
@@ -35,4 +35,4 @@ jobs:
           TAG: ${{ github.event.release.tag_name }}
         run: |
           VERSION="${TAG#v}"
-          gh release upload "$TAG" release/turnos-$VERSION.zip release/turnos-$VERSION.tar.gz release/turnos-$VERSION.sha256 --clobber
+          gh release upload "$TAG" release/fluxa-$VERSION.zip release/fluxa-$VERSION.tar.gz release/fluxa-$VERSION.sha256 --clobber

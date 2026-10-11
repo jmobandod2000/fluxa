@@ -1,21 +1,21 @@
 #!/bin/sh
-# Turnos: ./turnos <comando>   (./turnos help para ver todos)
+# Fluxa: ./fluxa <comando>   (./fluxa help para ver todos)
 # Usa Node si está instalado; si no, solo hace falta Docker.
 set -e
 cd "$(dirname "$0")"
 
 if command -v node >/dev/null 2>&1; then
-  exec node cli/turnos.mjs "$@"
+  exec node cli/fluxa.mjs "$@"
 fi
 
 NODE_IMAGE=node:24.13.1-alpine
 cmd="${1:-help}"
 case "$cmd" in
   install|config)
-    docker run --rm -it -v "$PWD:/work" -w /work -e LANG="$LANG" "$NODE_IMAGE" node cli/turnos.mjs "$cmd" --env-only
-    if grep -q '^TURNOS_BUILD=true' .env; then docker compose build app; else docker compose pull app || docker compose build app; fi
+    docker run --rm -it -v "$PWD:/work" -w /work -e LANG="$LANG" "$NODE_IMAGE" node cli/fluxa.mjs "$cmd" --env-only
+    if grep -q '^FLUXA_BUILD=true' .env; then docker compose build app; else docker compose pull app || docker compose build app; fi
     docker compose up -d db app
-    echo "Turnos iniciado: $(grep '^APP_URL=' .env | cut -d= -f2-)"
+    echo "Fluxa iniciado: $(grep '^APP_URL=' .env | cut -d= -f2-)"
     ;;
   start) docker compose up -d db app ;;
   stop) docker compose stop ;;

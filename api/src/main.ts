@@ -42,9 +42,9 @@ async function bootstrap() {
   );
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Turnos API')
+    .setTitle('Fluxa API')
     .setDescription(
-      'API de Turnos, sistema de turnos y filas de espera de código abierto',
+      'API de Fluxa, sistema de turnos y filas de espera de código abierto',
     )
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },

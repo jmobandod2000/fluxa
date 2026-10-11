@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:17.4
-    container_name: turnos_db
+    container_name: fluxa_db
     restart: always
     environment:
       POSTGRES_DB: ${DB_PS_DATABASE}
@@ -21,7 +21,7 @@ services:
 
   mail:
     image: axllent/mailpit:v1.27.0
-    container_name: turnos_mail
+    container_name: fluxa_mail
     profiles: ['mail']
     restart: unless-stopped
     environment:

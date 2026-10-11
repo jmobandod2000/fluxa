@@ -5,7 +5,7 @@ import { LocalStorage } from 'quasar';
 import useAuth from 'src/modules/auth/composables/useAuth';
 import { getUpdateStatus } from '../api/systemApi';
 
-const DISMISSED_KEY = 'turnos.updateDismissed';
+const DISMISSED_KEY = 'fluxa.updateDismissed';
 const HOUR_MS = 60 * 60 * 1000;
 
 const readDismissed = () => {

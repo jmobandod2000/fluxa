@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-# Turnos: imagen única (API + web). Construye el front y la API y deja solo lo necesario para producción.
+# Fluxa: imagen única (API + web). Construye el front y la API y deja solo lo necesario para producción.
 
 ARG NODE_IMAGE=node:24.13.1-alpine
 ARG PNPM_VERSION=10.33.0
@@ -52,12 +52,12 @@ COPY api/prisma/schema.prisma ./prisma/schema.prisma
 COPY api/prisma/migrations ./prisma/migrations
 COPY api/package.json ./package.json
 COPY --from=web /web/dist/spa ./web
-COPY docker/entrypoint.sh /usr/local/bin/turnos-entrypoint
-RUN chmod +x /usr/local/bin/turnos-entrypoint
+COPY docker/entrypoint.sh /usr/local/bin/fluxa-entrypoint
+RUN chmod +x /usr/local/bin/fluxa-entrypoint
 
 USER node
 EXPOSE 3010
 HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
   CMD wget -qO- http://127.0.0.1:3010/api/health >/dev/null || exit 1
-ENTRYPOINT ["/sbin/tini", "--", "turnos-entrypoint"]
+ENTRYPOINT ["/sbin/tini", "--", "fluxa-entrypoint"]
 CMD ["node", "dist/main"]

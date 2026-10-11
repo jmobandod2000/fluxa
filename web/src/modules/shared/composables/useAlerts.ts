@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { LocalStorage } from 'quasar';
 
-import turnosIcon from 'src/assets/brand/turnos-icon.png';
+import fluxaIcon from 'src/assets/brand/fluxa-icon.png';
 
 const SOUND_KEY = 'notificationSound';
 
@@ -72,7 +72,7 @@ const useAlerts = () => {
   const showDesktopNotification = (title: string, body: string, onClick?: () => void) => {
     if (desktopPermission.value !== 'granted' || document.visibilityState === 'visible') return;
     try {
-      const notification = new Notification(title, { body, icon: turnosIcon, tag: 'turnos' });
+      const notification = new Notification(title, { body, icon: fluxaIcon, tag: 'fluxa' });
       notification.onclick = () => {
         window.focus();
         onClick?.();

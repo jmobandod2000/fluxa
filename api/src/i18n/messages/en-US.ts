@@ -133,7 +133,7 @@ const messages: MessageSchema = {
       footer: 'If you did not ask for this link, you can ignore this email.',
     },
     test: {
-      subject: 'Turnos test email',
+      subject: 'Fluxa test email',
       heading: 'Email is working',
       intro:
         'If you receive this message, portal email notifications are set up correctly.',
