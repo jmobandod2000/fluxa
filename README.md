@@ -19,7 +19,8 @@
   <a href="#instalación">Instalar</a> ·
   <a href="#funcionalidades">Funcionalidades</a> ·
   <a href="#equipos-recomendados">Equipos</a> ·
-  <a href="#desarrollo">Desarrollar</a>
+  <a href="#desarrollo">Desarrollar</a> ·
+  <a href="#apoya-el-proyecto">Apoyar</a>
 </p>
 
 **Fluxa** ordena la atención por orden de llegada y por cita en cualquier negocio: carnicerías, charcuterías, barberías, peluquerías, autolavados, consultorios, farmacias, bancos y oficinas de atención al público. El cliente saca su número en un kiosco, una pantalla lo llama con sonido y voz, sigue su turno desde el celular y, si prefiere, reserva su cita en línea. Se instala en tu propio servidor con un solo comando; tus datos no salen de tu negocio.
@@ -123,6 +124,26 @@ Requisitos: Node.js 22.22+ (recomendado 24 LTS), pnpm 10 y Docker.
 
 Stack: NestJS 10, Prisma 6, PostgreSQL 17, Quasar 2 / Vue 3, eventos en tiempo real con Server-Sent Events.
 
+## Apoya el proyecto
+
+Fluxa es y seguirá siendo gratuito. Si le ayuda a tu negocio, puedes colaborar de forma voluntaria con su desarrollo:
+
+| Método | Dato |
+|---|---|
+| Binance Pay | ID **761259318** |
+
+<p align="center">
+  <img src="web/src/assets/support/binance-qr.png" alt="Código QR de Binance Pay" width="220" />
+</p>
+
+<!-- Buy Me a Coffee: agregar la fila con el enlace cuando la cuenta esté activa. -->
+
+Estos son los **únicos** canales oficiales; también aparecen en la pantalla **Acerca de** de la app. Si encuentras una copia del proyecto que pide colaboraciones por otros medios, no está asociada a este repositorio.
+
 ## Licencia
 
 [Apache-2.0](LICENSE). Copyright 2026 Juan M. Obando. Ver [NOTICE](NOTICE) y [CHANGELOG](CHANGELOG.md).
+
+---
+
+Creado y mantenido por **Juan M. Obando**.
