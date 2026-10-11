@@ -1,0 +1,18 @@
+# Solo entra a la imagen el código fuente necesario
+**/node_modules
+**/dist
+**/.quasar
+**/.env
+**/.env.*
+!**/.env.example
+**/*.log
+**/postgres-data
+**/coverage
+.git
+.github
+docs
+assets
+turnos-mcp
+backups
+api/prisma/data/*.local.ts
+api/scripts

@@ -1,0 +1,47 @@
+body {
+  background: #f4f6f9;
+}
+
+.page-title {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: $brand-navy;
+}
+
+.bg-brand {
+  background: $brand-navy;
+}
+
+.bg-brand-gradient {
+  background: linear-gradient(135deg, $brand-navy 0%, $brand-navy-light 55%, $primary 100%);
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #37474f;
+}
+
+.text-pre-line {
+  white-space: pre-line;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .q-header,
+  .q-drawer-container,
+  .print-hide {
+    display: none !important;
+  }
+
+  .q-page-container {
+    padding: 0 !important;
+  }
+}

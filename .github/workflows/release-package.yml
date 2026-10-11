@@ -1,0 +1,38 @@
+name: Paquete de instalación
+
+# Adjunta a cada Release el paquete listo para usar (sin código fuente): turnos, compose y .env.example
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Armar paquete
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION="${TAG#v}"
+          node cli/package.mjs "$VERSION"
+          cd release
+          zip -qr "turnos-$VERSION.zip" "turnos-$VERSION"
+          tar -czf "turnos-$VERSION.tar.gz" "turnos-$VERSION"
+          sha256sum "turnos-$VERSION.zip" "turnos-$VERSION.tar.gz" > "turnos-$VERSION.sha256"
+
+      - name: Subir al Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION="${TAG#v}"
+          gh release upload "$TAG" release/turnos-$VERSION.zip release/turnos-$VERSION.tar.gz release/turnos-$VERSION.sha256 --clobber

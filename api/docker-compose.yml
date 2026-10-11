@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:17.4
+    container_name: turnos_db
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_PS_DATABASE}
+      POSTGRES_USER: ${DB_PS_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PS_PASSWORD}
+      TZ: America/Caracas
+    ports:
+      - 127.0.0.1:${DB_PS_PORT}:${DB_PS_DOCKER_PORT}
+    volumes:
+      - ${DB_PS_DOCKER_VOLUME}:/var/lib/postgresql/data:rw
+    healthcheck:
+      test:
+        ['CMD-SHELL', 'pg_isready -U ${DB_PS_USERNAME} -d ${DB_PS_DATABASE}']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mail:
+    image: axllent/mailpit:v1.27.0
+    container_name: turnos_mail
+    profiles: ['mail']
+    restart: unless-stopped
+    environment:
+      MP_SMTP_DISABLE_RDNS: 'true'
+    ports:
+      - 127.0.0.1:1026:1025
+      - 127.0.0.1:8026:8025

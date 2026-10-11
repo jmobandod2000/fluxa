@@ -1,0 +1,193 @@
+import type { MessageSchema } from '../i18n';
+
+const messages: MessageSchema = {
+  errors: {
+    ticketNotFound: 'Ticket {term} not found',
+    userNotFound: 'User {id} not found',
+    invalidCredentials: 'Invalid email or password',
+    userInactive: 'The user is not active',
+    notLoggedIn: 'No active session',
+    forbiddenRole: 'User {name} does not have the required role: {roles}',
+    userNotInRequest: 'User not found in the request',
+    closureCommentRequired: 'A closure comment is required to close the ticket',
+    rootCauseRequired: 'A root cause is required to close the ticket',
+    sameStatus: 'The ticket is already in status {status}',
+    validation: 'The submitted data is not valid',
+    reportInvalidRange: 'The start date must be on or before the end date',
+    reportRangeTooLong: 'The report range cannot exceed {days} days',
+    reportInvalidTimeZone: 'The time zone {timeZone} is not valid',
+    siteNotFound: 'Site {id} was not found',
+    siteInactive: 'Site {name} is inactive',
+    siteDuplicate: 'A site named {name} already exists',
+    categoryNotFound: 'Category {id} was not found',
+    categoryInactive: 'Category {name} is inactive',
+    categoryDuplicate: 'A category named {name} already exists',
+    tooManyRequests: 'Too many attempts. Wait a few minutes and try again',
+    organizationMissing: 'Complete the company details first',
+    portalDisabled: 'The request portal is not available',
+    portalRejected:
+      'We could not receive the request. Check the details and try again',
+    portalTicketNotFound:
+      'We could not find that request. Check the follow-up link',
+    portalTicketClosed:
+      'This request is already closed. If the problem continues, create a new one',
+    portalReplyLimit:
+      'This request reached the maximum number of messages. Create a new one if needed',
+    portalBusy:
+      'The portal is receiving many requests. Try again in a few minutes',
+    notificationNotFound: 'Notification {id} was not found',
+    portalEmailUnavailable: 'Email notifications are not available',
+    portalAccessExpired:
+      'The link expired or is not valid. Request a new one from the portal',
+    unexpected: 'An unexpected error occurred',
+    db: {
+      duplicate: 'A record with the same value already exists in: {fields}',
+      foreignKey: 'The related record does not exist',
+      recordNotFound: 'Record not found',
+      unknown: 'An unknown database error occurred',
+      connection: 'Could not connect to the database',
+      critical: 'A critical error occurred in the database engine',
+    },
+  },
+  validation: {
+    isString: '{field} must be text',
+    isNotEmpty: '{field} is required',
+    minLength: '{field} must be at least {0} characters long',
+    maxLength: '{field} must be at most {0} characters long',
+    isEnum: '{field} has an invalid value',
+    isArray: '{field} must be a list',
+    isInt: '{field} must be a whole number',
+    isPositive: '{field} must be a positive number',
+    isDate: '{field} must be a valid date',
+    isEmail: '{field} is not a valid email',
+    isBoolean: '{field} must be true or false',
+    min: '{field} must be greater than or equal to {0}',
+    max: '{field} must be less than or equal to {0}',
+    matches: '{field} does not have the expected format',
+    passwordFormat:
+      'The password must contain an uppercase letter, a lowercase letter and a number',
+    whitelistValidation: 'The field {field} is not allowed',
+    default: '{field} is not valid',
+  },
+  emails: {
+    common: {
+      cta: 'View my request',
+      messageTitle: 'Message from the IT team',
+      solutionTitle: 'Solution',
+      footer:
+        'You are receiving this email because you reported a request to the IT team. Reply from the link; do not reply to this email.',
+    },
+    received: {
+      subject: 'We received your request {code}',
+      heading: 'We received your request {code}',
+      intro:
+        '"{title}" is now with the IT team. We will let you know here when there are updates.',
+    },
+    reply: {
+      subject: 'You have a reply on {code}',
+      heading: 'The IT team replied',
+      intro: 'There is a new message on your request "{title}".',
+    },
+    status: {
+      WAITING_INFO: {
+        subject: 'We need your reply on {code}',
+        heading: 'We need something from you',
+        intro:
+          'To continue with "{title}" the IT team needs your reply. Open the link and answer them.',
+      },
+      RESOLVED: {
+        subject: 'Your request {code} was resolved',
+        heading: 'Done! We resolved your request',
+        intro:
+          '"{title}" is resolved. If the problem continues, let us know from the link.',
+      },
+      CLOSED: {
+        subject: 'We closed your request {code}',
+        heading: 'Your request is closed',
+        intro: 'We closed "{title}". Thanks for letting us know.',
+      },
+      CANCELLED: {
+        subject: 'Your request {code} was cancelled',
+        heading: 'Your request was cancelled',
+        intro:
+          '"{title}" was cancelled by the IT team. If you think this is a mistake, create a new request.',
+      },
+    },
+    access: {
+      subject: 'Your requests to the IT team',
+      heading: 'Here are your requests',
+      intro:
+        'Use this link to see all your requests and their status. It expires in 7 days.',
+      cta: 'View my requests',
+      footer: 'If you did not ask for this link, you can ignore this email.',
+    },
+    test: {
+      subject: 'Turnos test email',
+      heading: 'Email is working',
+      intro:
+        'If you receive this message, portal email notifications are set up correctly.',
+      cta: 'Open the portal',
+    },
+  },
+  fields: {
+    title: 'Title',
+    description: "Requester's message",
+    requesterName: 'Requester',
+    requesterArea: 'Area',
+    requesterEmail: 'Email',
+    urgent: 'Urgent',
+    message: 'Message',
+    elapsedMs: 'Fill time',
+    portalEnabled: 'Portal enabled',
+    portalMessage: 'Portal message',
+    isPublic: 'Visible to the requester',
+    siteId: 'Site',
+    code: 'Code',
+    taxId: 'Tax ID',
+    phone: 'Phone',
+    address: 'Address',
+    website: 'Website',
+    channel: 'Channel',
+    categoryId: 'Category',
+    priority: 'Priority',
+    productCodes: 'Product codes',
+    documents: 'Documents',
+    affectedUnits: 'Units involved',
+    diagnosis: 'Diagnosis',
+    devRequestRef: 'Development request reference',
+    evidencePaths: 'Evidence',
+    assigneeId: 'Assigned to',
+    reportedAt: 'Report date',
+    status: 'Status',
+    note: 'Note',
+    rootCause: 'Root cause',
+    closureComment: 'Closure comment',
+    name: 'Name',
+    email: 'Email',
+    password: 'Password',
+    roles: 'Role',
+    isActive: 'Active',
+    limit: 'Limit',
+    offset: 'Offset',
+    from: 'From',
+    to: 'To',
+    weeks: 'Weeks',
+    search: 'Search',
+    onlyOpen: 'Open only',
+    groupBy: 'Group by',
+    timeZone: 'Time zone',
+  },
+  enums: {
+    status: {
+      OPEN: 'Open',
+      IN_ANALYSIS: 'In analysis',
+      WAITING_INFO: 'Waiting for information',
+      ESCALATED_DEV: 'Escalated to development',
+      RESOLVED: 'Resolved',
+      CLOSED: 'Closed',
+      CANCELLED: 'Cancelled',
+    },
+  },
+};
+
+export default messages;

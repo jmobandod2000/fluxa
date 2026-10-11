@@ -1,0 +1,61 @@
+# Turnos en producción: base de datos + aplicación (API y web en un solo servicio).
+# Lo normal es usar ./turnos install (o turnos.cmd install en Windows), que genera el .env.
+# A mano: copia .env.example a .env, cambia las contraseñas y ejecuta: docker compose up -d
+
+name: turnos
+
+services:
+  db:
+    image: postgres:17.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-turnos}
+      POSTGRES_USER: ${DB_USER:-turnos}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Falta DB_PASSWORD en .env}
+      TZ: ${TZ:-UTC}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  app:
+    image: ${TURNOS_IMAGE:-ghcr.io/jmobandod2000/turnos}:${TURNOS_VERSION:-latest}
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-turnos}:${DB_PASSWORD}@db:5432/${DB_NAME:-turnos}?schema=public
+      JWT_SECRET: ${JWT_SECRET:?Falta JWT_SECRET en .env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-12h}
+      LOGIN_NAME: ${LOGIN_NAME:-Administrador}
+      LOGIN_EMAIL: ${LOGIN_EMAIL:?Falta LOGIN_EMAIL en .env}
+      LOGIN_PASSWORD: ${LOGIN_PASSWORD:?Falta LOGIN_PASSWORD en .env}
+      APP_URL: ${APP_URL:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      UPDATE_CHECK: ${UPDATE_CHECK:-true}
+      TZ: ${TZ:-UTC}
+    ports:
+      - ${TURNOS_BIND:-0.0.0.0}:${TURNOS_PORT:-8081}:3010
+
+  # Buzón de pruebas (opcional): docker compose --profile mail up -d  →  http://localhost:8025
+  mail:
+    image: axllent/mailpit:v1.27.0
+    profiles: ['mail']
+    restart: unless-stopped
+    environment:
+      MP_SMTP_DISABLE_RDNS: 'true'
+    ports:
+      - 127.0.0.1:8025:8025
+
+volumes:
+  db-data:
