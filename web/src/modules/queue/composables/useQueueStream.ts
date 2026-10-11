@@ -4,10 +4,7 @@ import { streamUrl } from '../api/queueApi';
 import type { QueueEvent } from '../interfaces/queue';
 
 // Escucha los eventos en tiempo real (SSE). EventSource se reconecta solo si se cae la red.
-const useQueueStream = (
-  siteId: () => number | null,
-  onEvent: (event: QueueEvent) => void,
-) => {
+const useQueueStream = (siteId: () => number | null, onEvent: (event: QueueEvent) => void) => {
   const isConnected = ref(false);
   let source: EventSource | null = null;
 

@@ -60,7 +60,8 @@ export const useQueueAdminMutations = () => {
     onError: handleApiResponseError,
   });
   const toggleSection = useMutation({
-    mutationFn: ({ id, isActive }: { id: number; isActive: boolean }) => updateSection(id, { isActive }),
+    mutationFn: ({ id, isActive }: { id: number; isActive: boolean }) =>
+      updateSection(id, { isActive }),
     onSuccess: refresh,
     onError: handleApiResponseError,
   });

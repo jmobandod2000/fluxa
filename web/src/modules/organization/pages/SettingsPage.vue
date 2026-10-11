@@ -5,12 +5,13 @@ import { useI18n } from 'vue-i18n';
 import BusinessTypePicker from 'src/modules/queue/components/BusinessTypePicker.vue';
 import SectionsManager from 'src/modules/queue/components/SectionsManager.vue';
 import CountersManager from 'src/modules/queue/components/CountersManager.vue';
+import BookingSettings from 'src/modules/queue/components/BookingSettings.vue';
 import useVueQuery from 'src/modules/shared/composables/useVueQuery';
 import OrganizationForm from '../components/OrganizationForm.vue';
 import SitesManager from '../components/SitesManager.vue';
 import { PUBLIC_PROFILE_KEY, useOrganization } from '../composables/useOrganization';
 
-type SettingsTab = 'organization' | 'business' | 'sites' | 'sections' | 'counters';
+type SettingsTab = 'organization' | 'business' | 'sites' | 'sections' | 'counters' | 'booking';
 
 const { t } = useI18n();
 const { invalidQuery } = useVueQuery();
@@ -18,7 +19,9 @@ const { organization, saveMutation } = useOrganization();
 const tab = ref<SettingsTab>('organization');
 const businessType = ref<string | null>(null);
 
-watch(organization, (value) => (businessType.value = value?.businessType ?? null), { immediate: true });
+watch(organization, (value) => (businessType.value = value?.businessType ?? null), {
+  immediate: true,
+});
 
 // Cambiar el tipo de negocio solo cambia el vocabulario; las secciones existentes se conservan
 const saveBusinessType = () => {
@@ -57,11 +60,16 @@ const saveBusinessType = () => {
           indicator-color="primary"
           class="text-grey-8"
         >
-          <q-tab name="organization" icon="sym_r_apartment" :label="t('settings.tabs.organization')" />
+          <q-tab
+            name="organization"
+            icon="sym_r_apartment"
+            :label="t('settings.tabs.organization')"
+          />
           <q-tab name="business" icon="sym_r_category" :label="t('settings.tabs.business')" />
           <q-tab name="sites" icon="sym_r_store" :label="t('settings.tabs.sites')" />
           <q-tab name="sections" icon="sym_r_view_list" :label="t('settings.tabs.sections')" />
           <q-tab name="counters" icon="sym_r_storefront" :label="t('settings.tabs.counters')" />
+          <q-tab name="booking" icon="sym_r_event_available" :label="t('settings.tabs.booking')" />
         </q-tabs>
         <q-separator />
         <q-tab-panels v-model="tab" animated>
@@ -98,6 +106,9 @@ const saveBusinessType = () => {
           </q-tab-panel>
           <q-tab-panel name="counters">
             <CountersManager />
+          </q-tab-panel>
+          <q-tab-panel name="booking">
+            <BookingSettings />
           </q-tab-panel>
         </q-tab-panels>
       </q-card>

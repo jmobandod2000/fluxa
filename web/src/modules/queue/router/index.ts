@@ -9,15 +9,34 @@ export const QueueStaffRouter: RouteRecordRaw[] = [
     name: QueueRoutes.ATTEND,
     component: () => import('../pages/StaffPanelPage.vue'),
   },
+  {
+    path: 'citas',
+    name: QueueRoutes.AGENDA,
+    component: () => import('../pages/AgendaPage.vue'),
+  },
 ];
 
 // Kiosco, pantalla y seguimiento: pantallas completas sin sesión
 export const QueuePublicRouter: RouteRecordRaw[] = [
   { path: '/kiosco', name: QueueRoutes.KIOSK, component: () => import('../pages/KioskPage.vue') },
-  { path: '/pantalla', name: QueueRoutes.DISPLAY, component: () => import('../pages/DisplayPage.vue') },
+  {
+    path: '/pantalla',
+    name: QueueRoutes.DISPLAY,
+    component: () => import('../pages/DisplayPage.vue'),
+  },
   {
     path: '/t/:token([A-Za-z0-9_-]{43})',
     name: QueueRoutes.TRACK,
     component: () => import('../pages/TrackTurnPage.vue'),
+  },
+  {
+    path: '/reservar',
+    name: QueueRoutes.BOOKING,
+    component: () => import('../pages/BookingPage.vue'),
+  },
+  {
+    path: '/cita/:token([A-Za-z0-9_-]{43})',
+    name: QueueRoutes.APPOINTMENT,
+    component: () => import('../pages/AppointmentPage.vue'),
   },
 ];

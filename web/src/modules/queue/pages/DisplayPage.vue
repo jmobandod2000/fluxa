@@ -18,7 +18,10 @@ const route = useRoute();
 const { playChime } = useAlerts();
 const siteId = computed(() => parseSiteParam(route.query.sede));
 
-const { data: config } = useQuery({ queryKey: ['queue', 'public-config'], queryFn: getPublicConfig });
+const { data: config } = useQuery({
+  queryKey: ['queue', 'public-config'],
+  queryFn: getPublicConfig,
+});
 const { data: board, refetch } = useQuery({
   queryKey: ['queue', 'board', siteId],
   queryFn: () => getBoard(siteId.value),
@@ -34,9 +37,15 @@ const now = ref(new Date());
 const clock = setInterval(() => (now.value = new Date()), 15_000);
 let flashTimer: ReturnType<typeof setTimeout> | undefined;
 
-const current = computed(() => board.value?.called.find((call) => call.status === 'CALLED') ?? board.value?.called[0]);
-const recent = computed(() => board.value?.called.filter((call) => call !== current.value).slice(0, 5) ?? []);
-const siteName = computed(() => config.value?.sites.find((site) => site.id === siteId.value)?.name ?? null);
+const current = computed(
+  () => board.value?.called.find((call) => call.status === 'CALLED') ?? board.value?.called[0],
+);
+const recent = computed(
+  () => board.value?.called.filter((call) => call !== current.value).slice(0, 5) ?? [],
+);
+const siteName = computed(
+  () => config.value?.sites.find((site) => site.id === siteId.value)?.name ?? null,
+);
 
 // El navegador solo permite sonido después de un toque: el primer clic lo habilita
 const enableSound = () => {
@@ -63,7 +72,10 @@ const onEvent = async (event: QueueEvent) => {
   );
 };
 
-const { isConnected } = useQueueStream(() => siteId.value, (event) => void onEvent(event));
+const { isConnected } = useQueueStream(
+  () => siteId.value,
+  (event) => void onEvent(event),
+);
 
 onBeforeUnmount(() => {
   clearInterval(clock);
@@ -82,7 +94,9 @@ onBeforeUnmount(() => {
         <q-icon v-if="!isConnected" name="sym_r_wifi_off" size="28px" color="orange-5">
           <q-tooltip>{{ t('display.offline') }}</q-tooltip>
         </q-icon>
-        <div class="display__clock">{{ now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}</div>
+        <div class="display__clock">
+          {{ now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
+        </div>
       </div>
     </header>
 
@@ -90,7 +104,9 @@ onBeforeUnmount(() => {
       <section class="display__current" :class="{ 'display__current--flash': flash }">
         <template v-if="current">
           <div class="display__label">{{ t('display.nowServing') }}</div>
-          <div class="display__code" :style="{ color: current.color ?? '#fff' }">{{ current.code }}</div>
+          <div class="display__code" :style="{ color: current.color ?? '#fff' }">
+            {{ current.code }}
+          </div>
           <div class="display__counter">
             <q-icon name="sym_r_arrow_forward" />
             {{ current.counter ?? counterWord }}
@@ -103,7 +119,9 @@ onBeforeUnmount(() => {
       <aside class="display__side">
         <div class="display__side-title">{{ t('display.recent') }}</div>
         <div v-for="call in recent" :key="call.code + call.calledAt" class="display__row">
-          <span class="display__row-code" :style="{ borderColor: call.color ?? '#1A4FD6' }">{{ call.code }}</span>
+          <span class="display__row-code" :style="{ borderColor: call.color ?? '#1A4FD6' }">{{
+            call.code
+          }}</span>
           <span class="display__row-counter">{{ call.counter }}</span>
         </div>
         <div v-if="!recent.length" class="display__muted">—</div>
@@ -112,7 +130,9 @@ onBeforeUnmount(() => {
 
     <footer class="display__footer">
       <div v-for="section in board?.sections" :key="section.id" class="display__chip">
-        <span class="display__chip-prefix" :style="{ background: section.color ?? '#1A4FD6' }">{{ section.prefix }}</span>
+        <span class="display__chip-prefix" :style="{ background: section.color ?? '#1A4FD6' }">{{
+          section.prefix
+        }}</span>
         {{ section.name }} · {{ t('display.waiting', { n: section.waiting }, section.waiting) }}
       </div>
     </footer>

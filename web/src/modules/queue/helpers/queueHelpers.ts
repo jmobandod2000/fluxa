@@ -44,3 +44,8 @@ export const announce = (text: string, locale: string) => {
 
 export const minutesSince = (iso: string | null, now = Date.now()) =>
   iso ? Math.max(0, Math.round((now - new Date(iso).getTime()) / 60000)) : 0;
+
+export const buildBookingUrl = () => `${appBase()}#/reservar`;
+
+// Fecha local en formato AAAA-MM-DD (sin pasar por UTC)
+export const localDate = (date = new Date()) => date.toLocaleDateString('en-CA');

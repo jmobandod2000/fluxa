@@ -33,11 +33,14 @@ const readCounter = () => {
 
 const counterId = ref<number | null>(readCounter());
 const activeCounters = computed(() => counters.value.filter((counter) => counter.isActive));
-const counterOptions = computed(() => activeCounters.value.map(({ id, name }) => ({ value: id, label: name })));
+const counterOptions = computed(() =>
+  activeCounters.value.map(({ id, name }) => ({ value: id, label: name })),
+);
 
 // Si el puesto guardado ya no existe, se elige el primero disponible
 watch(activeCounters, (list) => {
-  if (list.length && !list.some((counter) => counter.id === counterId.value)) counterId.value = list[0]!.id;
+  if (list.length && !list.some((counter) => counter.id === counterId.value))
+    counterId.value = list[0]!.id;
 });
 watch(counterId, (id) => {
   try {
@@ -64,7 +67,10 @@ const transferOptions = computed(() =>
   sectionOptions.value.filter((option) => option.value !== current.value?.sectionId),
 );
 
-useQueueStream(() => siteId.value, () => void refetch());
+useQueueStream(
+  () => siteId.value,
+  () => void refetch(),
+);
 
 const onSettled = () => void refetch();
 const nextMutation = useMutation({
@@ -87,7 +93,10 @@ const transferMutation = useMutation({
 });
 
 const isBusy = computed(
-  () => nextMutation.isPending.value || actionMutation.isPending.value || transferMutation.isPending.value,
+  () =>
+    nextMutation.isPending.value ||
+    actionMutation.isPending.value ||
+    transferMutation.isPending.value,
 );
 
 // Atajo: barra espaciadora o Enter llaman al siguiente (fuera de campos de texto)
@@ -109,7 +118,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
       <div class="row items-center q-col-gutter-md q-mb-md">
         <div class="col-12 col-sm">
           <div class="page-title">{{ t('attend.title') }}</div>
-          <div class="text-grey-7">{{ t('attend.subtitle', { customer: customerWord.toLowerCase() }) }}</div>
+          <div class="text-grey-7">
+            {{ t('attend.subtitle', { customer: customerWord.toLowerCase() }) }}
+          </div>
         </div>
         <div class="col-12 col-sm-auto" style="min-width: 240px">
           <q-select
@@ -133,19 +144,65 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
           <q-card flat bordered class="attend__current">
             <q-card-section v-if="current" class="text-center">
               <div class="text-grey-7">{{ t('attend.serving') }}</div>
-              <div class="attend__code" :style="{ color: current.Section.color ?? '#1A4FD6' }">{{ current.code }}</div>
+              <div class="attend__code" :style="{ color: current.Section.color ?? '#1A4FD6' }">
+                {{ current.code }}
+              </div>
               <div class="text-h6">{{ current.Section.name }}</div>
               <div class="text-caption text-grey-7">
-                {{ t('attend.waited', { n: minutesSince(current.createdAt, new Date(current.calledAt ?? now).getTime()) }) }}
-                <span v-if="current.recallCount"> · {{ t('attend.recalled', { n: current.recallCount }) }}</span>
+                {{
+                  t('attend.waited', {
+                    n: minutesSince(current.createdAt, new Date(current.calledAt ?? now).getTime()),
+                  })
+                }}
+                <span v-if="current.recallCount">
+                  · {{ t('attend.recalled', { n: current.recallCount }) }}</span
+                >
               </div>
               <div class="row justify-center q-gutter-sm q-mt-md">
-                <q-btn outline no-caps color="primary" icon="sym_r_campaign" :label="t('attend.recall')" :disable="isBusy" @click="actionMutation.mutate('recall')" />
-                <q-btn outline no-caps color="positive" icon="sym_r_check_circle" :label="t('attend.finish')" :disable="isBusy" @click="actionMutation.mutate('finish')" />
-                <q-btn outline no-caps color="grey-8" icon="sym_r_person_off" :label="t('attend.noShow')" :disable="isBusy" @click="actionMutation.mutate('no-show')" />
-                <q-btn-dropdown v-if="transferOptions.length" outline no-caps color="grey-8" icon="sym_r_swap_horiz" :label="t('attend.transfer')" :disable="isBusy">
+                <q-btn
+                  outline
+                  no-caps
+                  color="primary"
+                  icon="sym_r_campaign"
+                  :label="t('attend.recall')"
+                  :disable="isBusy"
+                  @click="actionMutation.mutate('recall')"
+                />
+                <q-btn
+                  outline
+                  no-caps
+                  color="positive"
+                  icon="sym_r_check_circle"
+                  :label="t('attend.finish')"
+                  :disable="isBusy"
+                  @click="actionMutation.mutate('finish')"
+                />
+                <q-btn
+                  outline
+                  no-caps
+                  color="grey-8"
+                  icon="sym_r_person_off"
+                  :label="t('attend.noShow')"
+                  :disable="isBusy"
+                  @click="actionMutation.mutate('no-show')"
+                />
+                <q-btn-dropdown
+                  v-if="transferOptions.length"
+                  outline
+                  no-caps
+                  color="grey-8"
+                  icon="sym_r_swap_horiz"
+                  :label="t('attend.transfer')"
+                  :disable="isBusy"
+                >
                   <q-list>
-                    <q-item v-for="option in transferOptions" :key="option.value" v-close-popup clickable @click="transferMutation.mutate(option.value)">
+                    <q-item
+                      v-for="option in transferOptions"
+                      :key="option.value"
+                      v-close-popup
+                      clickable
+                      @click="transferMutation.mutate(option.value)"
+                    >
                       <q-item-section>{{ option.label }}</q-item-section>
                     </q-item>
                   </q-list>
@@ -170,7 +227,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
                 :disable="!counterId || isBusy"
                 @click="nextMutation.mutate()"
               />
-              <div class="text-caption text-grey-6 text-center q-mt-xs">{{ t('attend.shortcut') }}</div>
+              <div class="text-caption text-grey-6 text-center q-mt-xs">
+                {{ t('attend.shortcut') }}
+              </div>
             </q-card-section>
           </q-card>
         </div>
@@ -206,12 +265,17 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
               </q-item>
               <q-item v-for="turn in state?.waiting" :key="turn.id" dense>
                 <q-item-section avatar>
-                  <q-badge :style="{ background: turn.Section.color ?? '#1A4FD6' }" class="text-weight-bold q-px-sm q-py-xs">
+                  <q-badge
+                    :style="{ background: turn.Section.color ?? '#1A4FD6' }"
+                    class="text-weight-bold q-px-sm q-py-xs"
+                  >
                     {{ turn.code }}
                   </q-badge>
                 </q-item-section>
                 <q-item-section>{{ turn.Section.name }}</q-item-section>
-                <q-item-section side class="text-caption">{{ t('attend.minutes', { n: minutesSince(turn.createdAt, now) }) }}</q-item-section>
+                <q-item-section side class="text-caption">{{
+                  t('attend.minutes', { n: minutesSince(turn.createdAt, now) })
+                }}</q-item-section>
               </q-item>
             </q-list>
           </q-card>

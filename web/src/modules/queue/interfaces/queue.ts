@@ -12,6 +12,8 @@ export interface SectionSummary {
 export interface Section extends SectionSummary {
   description: string | null;
   sortOrder: number;
+  bookable: boolean;
+  durationMinutes: number;
   isActive: boolean;
 }
 
@@ -20,6 +22,8 @@ export interface SectionPayload {
   prefix: string;
   description?: string | null;
   color?: string | null;
+  bookable?: boolean;
+  durationMinutes?: number;
   isActive?: boolean;
 }
 
@@ -30,12 +34,14 @@ export interface Counter {
   isActive: boolean;
   Sections: SectionSummary[];
   Site: SiteSummary | null;
+  Schedules: ScheduleBlock[];
 }
 
 export interface CounterPayload {
   name: string;
   siteId: number | null;
   sectionIds: number[];
+  schedules?: ScheduleBlock[];
   isActive?: boolean;
 }
 
@@ -117,4 +123,72 @@ export enum QueueRoutes {
   KIOSK = 'kiosk',
   DISPLAY = 'display',
   TRACK = 'track-turn',
+  AGENDA = 'agenda',
+  BOOKING = 'booking',
+  APPOINTMENT = 'appointment',
+}
+
+// ---------- citas ----------
+export type AppointmentStatus = 'BOOKED' | 'CHECKED_IN' | 'CANCELLED' | 'NO_SHOW';
+
+export interface ScheduleBlock {
+  weekday: number;
+  startMinute: number;
+  endMinute: number;
+}
+
+export interface BookableService extends SectionSummary {
+  description: string | null;
+  durationMinutes: number;
+  counters: { id: number; name: string }[];
+}
+
+export interface BookingConfig {
+  name: string | null;
+  businessType: string | null;
+  enabled: boolean;
+  bookingDays: number;
+  services: BookableService[];
+}
+
+export interface Slot {
+  startsAt: string;
+  counters: { id: number; name: string }[];
+}
+
+export interface BookingPayload {
+  sectionId: number;
+  counterId?: number | null;
+  startsAt: string;
+  customerName: string;
+  customerPhone?: string | null;
+  customerEmail?: string | null;
+  notes?: string | null;
+  website?: string;
+}
+
+export interface PublicAppointment {
+  token: string;
+  status: AppointmentStatus;
+  startsAt: string;
+  endsAt: string;
+  customerName: string;
+  service: string;
+  color: string | null;
+  counter: string;
+  turn: { code: string; status: TurnStatus } | null;
+}
+
+export interface Appointment {
+  id: number;
+  status: AppointmentStatus;
+  startsAt: string;
+  endsAt: string;
+  customerName: string;
+  customerPhone: string | null;
+  customerEmail: string | null;
+  notes: string | null;
+  Section: SectionSummary;
+  Counter: { id: number; name: string };
+  Turn: { id: number; code: string; status: TurnStatus } | null;
 }

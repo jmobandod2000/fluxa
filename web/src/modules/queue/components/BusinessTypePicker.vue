@@ -21,7 +21,11 @@ const { t } = useI18n();
         @keyup.enter="selected = type.key"
       >
         <q-card-section class="column items-center text-center q-gutter-xs">
-          <q-icon :name="type.icon" size="36px" :color="selected === type.key ? 'white' : 'primary'" />
+          <q-icon
+            :name="type.icon"
+            size="36px"
+            :color="selected === type.key ? 'white' : 'primary'"
+          />
           <div class="text-subtitle2">{{ t(`business.${type.key}.label`) }}</div>
           <div class="text-caption type-card__hint">{{ t(`business.${type.key}.hint`) }}</div>
         </q-card-section>

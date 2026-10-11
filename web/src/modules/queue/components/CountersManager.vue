@@ -6,8 +6,9 @@ import { useI18n } from 'vue-i18n';
 import { formatSite, useSites } from 'src/modules/organization/composables/useSites';
 import { usePublicProfile } from 'src/modules/organization/composables/useOrganization';
 import { useCounters, useQueueAdminMutations, useSections } from '../composables/useQueueAdmin';
+import ScheduleEditor from './ScheduleEditor.vue';
 import useVocabulary from '../composables/useVocabulary';
-import type { Counter, CounterPayload } from '../interfaces/queue';
+import type { Counter, CounterPayload, ScheduleBlock } from '../interfaces/queue';
 
 const { t } = useI18n();
 const $q = useQuasar();
@@ -20,15 +21,25 @@ const { saveCounter, removeCounter } = useQueueAdminMutations();
 
 const isDialogOpen = ref(false);
 const editingId = ref<number | undefined>();
-const form = ref<CounterPayload>({ name: '', siteId: null, sectionIds: [] });
-const siteChoices = computed(() => [{ value: null, label: t('counters.allSites') }, ...siteOptions.value]);
+const form = ref<CounterPayload & { schedules: ScheduleBlock[] }>({
+  name: '',
+  siteId: null,
+  sectionIds: [],
+  schedules: [],
+});
+const siteChoices = computed(() => [
+  { value: null, label: t('counters.allSites') },
+  ...siteOptions.value,
+]);
 
 const openDialog = (counter?: Counter) => {
   editingId.value = counter?.id;
   form.value = {
     name: counter?.name ?? `${counterWord.value} ${counters.value.length + 1}`,
     siteId: counter?.siteId ?? null,
-    sectionIds: counter?.Sections.map(({ id }) => id) ?? sectionOptions.value.map(({ value }) => value),
+    sectionIds:
+      counter?.Sections.map(({ id }) => id) ?? sectionOptions.value.map(({ value }) => value),
+    schedules: counter?.Schedules.map((block) => ({ ...block })) ?? [],
   };
   isDialogOpen.value = true;
 };
@@ -56,8 +67,17 @@ const sectionsRule = (value: number[]) => value.length > 0 || t('counters.rules.
 <template>
   <div class="q-gutter-md">
     <div class="row items-center">
-      <div class="col text-body2 text-grey-8">{{ t('counters.description', { counter: counterWord }) }}</div>
-      <q-btn unelevated no-caps color="primary" icon="sym_r_add" :label="t('counters.add', { counter: counterWord })" @click="openDialog()" />
+      <div class="col text-body2 text-grey-8">
+        {{ t('counters.description', { counter: counterWord }) }}
+      </div>
+      <q-btn
+        unelevated
+        no-caps
+        color="primary"
+        icon="sym_r_add"
+        :label="t('counters.add', { counter: counterWord })"
+        @click="openDialog()"
+      />
     </div>
 
     <q-list bordered separator class="rounded-borders">
@@ -70,13 +90,25 @@ const sectionsRule = (value: number[]) => value.length > 0 || t('counters.rules.
           <q-item-label class="text-weight-medium">{{ counter.name }}</q-item-label>
           <q-item-label caption>
             {{ counter.Site ? formatSite(counter.Site) : t('counters.allSites') }} ·
-            {{ counter.Sections.map((section) => section.name).join(', ') || t('counters.noSections') }}
+            {{
+              counter.Sections.map((section) => section.name).join(', ') || t('counters.noSections')
+            }}
+            <span v-if="counter.Schedules.length">
+              · {{ t('counters.withSchedule', { n: counter.Schedules.length }) }}</span
+            >
           </q-item-label>
         </q-item-section>
         <q-item-section side>
           <div class="row no-wrap q-gutter-xs">
             <q-btn flat round dense icon="sym_r_edit" @click="openDialog(counter)" />
-            <q-btn flat round dense color="negative" icon="sym_r_delete" @click="confirmRemove(counter)" />
+            <q-btn
+              flat
+              round
+              dense
+              color="negative"
+              icon="sym_r_delete"
+              @click="confirmRemove(counter)"
+            />
           </div>
         </q-item-section>
       </q-item>
@@ -84,10 +116,19 @@ const sectionsRule = (value: number[]) => value.length > 0 || t('counters.rules.
 
     <q-dialog v-model="isDialogOpen">
       <q-card style="width: 480px; max-width: 95vw">
-        <q-card-section class="text-h6">{{ editingId ? t('counters.editTitle') : t('counters.createTitle') }}</q-card-section>
+        <q-card-section class="text-h6">{{
+          editingId ? t('counters.editTitle') : t('counters.createTitle')
+        }}</q-card-section>
         <q-form @submit.prevent="submit">
           <q-card-section class="q-gutter-md q-pt-none">
-            <q-input v-model="form.name" :label="t('counters.fields.name')" outlined autofocus maxlength="40" :rules="[nameRule]" />
+            <q-input
+              v-model="form.name"
+              :label="t('counters.fields.name')"
+              outlined
+              autofocus
+              maxlength="40"
+              :rules="[nameRule]"
+            />
             <q-select
               v-if="siteOptions.length > 1"
               v-model="form.siteId"
@@ -108,10 +149,26 @@ const sectionsRule = (value: number[]) => value.length > 0 || t('counters.rules.
               map-options
               outlined
             />
+            <q-expansion-item
+              dense
+              icon="sym_r_calendar_month"
+              :label="t('counters.schedule')"
+              :caption="t('counters.scheduleHint')"
+              header-class="q-px-none"
+            >
+              <ScheduleEditor v-model="form.schedules" class="q-pt-sm" />
+            </q-expansion-item>
           </q-card-section>
           <q-card-actions align="right">
             <q-btn v-close-popup flat no-caps :label="t('common.cancel')" />
-            <q-btn type="submit" unelevated no-caps color="primary" :label="t('common.save')" :loading="saveCounter.isPending.value" />
+            <q-btn
+              type="submit"
+              unelevated
+              no-caps
+              color="primary"
+              :label="t('common.save')"
+              :loading="saveCounter.isPending.value"
+            />
           </q-card-actions>
         </q-form>
       </q-card>

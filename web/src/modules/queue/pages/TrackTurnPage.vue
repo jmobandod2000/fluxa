@@ -14,7 +14,11 @@ const route = useRoute();
 const { playChime } = useAlerts();
 const token = computed(() => String(route.params.token ?? ''));
 
-const { data: turn, error, refetch } = useQuery({
+const {
+  data: turn,
+  error,
+  refetch,
+} = useQuery({
   queryKey: ['queue', 'track', token],
   queryFn: () => getPublicTurn(token.value),
   refetchInterval: 30_000,
@@ -23,9 +27,14 @@ const { data: turn, error, refetch } = useQuery({
 
 const notFound = computed(() => isAxiosError(error.value) && error.value.response?.status === 404);
 const isCalled = computed(() => turn.value?.status === 'CALLED');
-const isClosed = computed(() => ['DONE', 'NO_SHOW', 'CANCELLED'].includes(turn.value?.status ?? ''));
+const isClosed = computed(() =>
+  ['DONE', 'NO_SHOW', 'CANCELLED'].includes(turn.value?.status ?? ''),
+);
 
-useQueueStream(() => null, () => void refetch());
+useQueueStream(
+  () => null,
+  () => void refetch(),
+);
 
 // Aviso en el celular cuando llaman este turno: sonido y vibración
 watch(isCalled, (called, before) => {
@@ -53,7 +62,9 @@ watch(isCalled, (called, before) => {
           <div class="text-h5 text-weight-bold">{{ t('track.itsYourTurn') }}</div>
           <div class="text-h6">{{ t('track.goTo', { counter: turn.counter }) }}</div>
         </div>
-        <div v-else-if="isClosed" class="track__status text-grey-8">{{ t(`track.status.${turn.status}`) }}</div>
+        <div v-else-if="isClosed" class="track__status text-grey-8">
+          {{ t(`track.status.${turn.status}`) }}
+        </div>
         <div v-else class="track__status">
           <div class="track__ahead">{{ turn.ahead }}</div>
           <div>{{ t('track.ahead', { n: turn.ahead }, turn.ahead) }}</div>
@@ -61,7 +72,9 @@ watch(isCalled, (called, before) => {
         </div>
       </template>
 
-      <div v-else class="row justify-center q-pa-xl"><q-spinner-dots size="40px" color="primary" /></div>
+      <div v-else class="row justify-center q-pa-xl">
+        <q-spinner-dots size="40px" color="primary" />
+      </div>
     </div>
   </div>
 </template>

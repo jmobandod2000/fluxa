@@ -37,7 +37,9 @@ const now = ref(new Date());
 let countdownTimer: ReturnType<typeof setInterval> | undefined;
 const clock = setInterval(() => (now.value = new Date()), 30_000);
 
-const siteName = computed(() => config.value?.sites.find((site) => site.id === siteId.value)?.name ?? null);
+const siteName = computed(
+  () => config.value?.sites.find((site) => site.id === siteId.value)?.name ?? null,
+);
 const trackUrl = computed(() => (ticket.value ? buildTrackUrl(ticket.value.token) : ''));
 
 const reset = () => {
@@ -87,11 +89,15 @@ onBeforeUnmount(() => {
         <div class="kiosk__business">{{ config?.name }}</div>
         <div v-if="siteName" class="kiosk__site">{{ siteName }}</div>
       </div>
-      <div class="kiosk__clock">{{ now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}</div>
+      <div class="kiosk__clock">
+        {{ now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
+      </div>
     </header>
 
     <main class="kiosk__main no-print">
-      <div v-if="isLoading" class="row justify-center q-pa-xl"><q-spinner-dots size="56px" color="white" /></div>
+      <div v-if="isLoading" class="row justify-center q-pa-xl">
+        <q-spinner-dots size="56px" color="white" />
+      </div>
 
       <template v-else-if="!ticket">
         <h1 class="kiosk__title">{{ t('kiosk.title') }}</h1>
@@ -115,7 +121,9 @@ onBeforeUnmount(() => {
 
       <div v-else class="kiosk__result">
         <div class="kiosk__result-label">{{ t('kiosk.yourNumber') }}</div>
-        <div class="kiosk__code" :style="{ color: ticket.color ?? '#1A4FD6' }">{{ ticket.code }}</div>
+        <div class="kiosk__code" :style="{ color: ticket.color ?? '#1A4FD6' }">
+          {{ ticket.code }}
+        </div>
         <div class="kiosk__result-section">{{ ticket.section }}</div>
         <div class="kiosk__ahead">
           {{ ticket.ahead ? t('kiosk.ahead', { n: ticket.ahead }, ticket.ahead) : t('kiosk.next') }}
@@ -124,7 +132,9 @@ onBeforeUnmount(() => {
           <QrCode :value="trackUrl" :size="150" class="kiosk__qr" />
           <div class="kiosk__qr-hint">{{ t('kiosk.scan') }}</div>
         </div>
-        <button type="button" class="kiosk__done" @click="reset">{{ t('kiosk.done', { s: countdown }) }}</button>
+        <button type="button" class="kiosk__done" @click="reset">
+          {{ t('kiosk.done', { s: countdown }) }}
+        </button>
       </div>
     </main>
 

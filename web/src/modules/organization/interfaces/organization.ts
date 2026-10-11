@@ -7,6 +7,8 @@ export interface Organization {
   address: string | null;
   website: string | null;
   businessType: string | null;
+  bookingEnabled: boolean;
+  bookingDays: number;
   updatedAt: string;
 }
 
@@ -18,6 +20,8 @@ export interface OrganizationPayload {
   address: string | null;
   website: string | null;
   businessType?: string | null;
+  bookingEnabled?: boolean;
+  bookingDays?: number;
 }
 
 export interface PublicProfile {
